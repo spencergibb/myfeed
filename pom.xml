@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>myfeed-admin</module>
+		<module>myfeed-config</module>
 		<module>myfeed-discovery</module>
 		<module>myfeed-feed</module>
 		<module>myfeed-router</module>

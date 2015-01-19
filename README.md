@@ -1,2 +1,2 @@
 # myfeed
-Myfeed is a sample cloud natvie application build using spring-cloud
+Myfeed is a sample cloud native application build using spring-cloud

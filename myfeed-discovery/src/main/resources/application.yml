@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: myfeed-discovery
+
+info:
+  description: myfeed discover server based on spring-cloud-netflix-eureka-server
+
+server:
+  port: 11010
