@@ -3,3 +3,8 @@ info:
 
 server:
   port: 11070
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost/users
