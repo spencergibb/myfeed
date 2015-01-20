@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: myfeed-feed
+  cloud:
+    config:
+      uri: http://config.myfeed.com:11020
+

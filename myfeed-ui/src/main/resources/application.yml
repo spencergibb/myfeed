@@ -1,0 +1,5 @@
+info:
+  description: myfeed ui server
+
+server:
+  port: 11040

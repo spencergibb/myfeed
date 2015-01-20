@@ -1,0 +1,5 @@
+info:
+  description: myfeed admin service
+
+server:
+  port: 11050

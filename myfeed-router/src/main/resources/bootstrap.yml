@@ -3,8 +3,7 @@ spring:
     name: myfeed-router
   cloud:
     config:
-      discovery:
-        enabled: true
+      uri: http://config.myfeed.com:11020
 
 eureka:
   client:

@@ -4,3 +4,5 @@ info:
 server:
   port: 11030
 
+management:
+  port: 11031

@@ -1,0 +1,5 @@
+info:
+  description: myfeed user service
+
+server:
+  port: 11070

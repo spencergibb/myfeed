@@ -1,0 +1,5 @@
+info:
+  description: myfeed feed service
+
+server:
+  port: 11060
