@@ -1,22 +1,6 @@
-spring:
-  application:
-    name: myfeed-router
-
 info:
   description: myfeed router based on spring-cloud-netflix-zuul
 
 server:
-  port: 11020
+  port: 11030
 
-endpoints:
-  restart:
-    enabled: true
-  shutdown:
-    enabled: true
-  health:
-    sensitive: false
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://discovery.myfeed.com:11010/eureka/

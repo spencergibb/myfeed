@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: configserver
+
+  cloud:
+    config:
+      enabled: false

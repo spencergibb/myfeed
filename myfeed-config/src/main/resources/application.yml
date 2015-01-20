@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:spencergibb/myfeed-config.git
+      enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery.myfeed.com:11010/eureka/
+
+server:
+  port: 11020
