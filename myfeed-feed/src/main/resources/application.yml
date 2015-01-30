@@ -3,3 +3,8 @@ info:
 
 server:
   port: 11060
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost/feeds
