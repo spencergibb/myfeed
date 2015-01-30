@@ -52,6 +52,11 @@
 				<artifactId>myfeed-core</artifactId>
 				<version>1.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.session</groupId>
+				<artifactId>spring-session</artifactId>
+				<version>1.0.0.RELEASE</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

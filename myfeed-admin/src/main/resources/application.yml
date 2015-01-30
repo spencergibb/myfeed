@@ -3,3 +3,8 @@ info:
 
 server:
   port: 11050
+
+security:
+  sessions: NEVER
+  user:
+    password: password
