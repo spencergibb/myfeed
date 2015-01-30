@@ -31,6 +31,15 @@
 		<spring-cloud.version>1.0.0.BUILD-SNAPSHOT</spring-cloud.version>
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
