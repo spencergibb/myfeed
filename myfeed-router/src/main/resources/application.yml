@@ -2,7 +2,7 @@ info:
   description: myfeed router based on spring-cloud-netflix-zuul
 
 server:
-  port: 11030
+  port: 11080
 
 management:
-  port: 11031
+  port: 11081

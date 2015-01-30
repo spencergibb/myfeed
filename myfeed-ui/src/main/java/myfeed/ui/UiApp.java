@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @EnableDiscoveryClient
 @RestController
-public class UiApplication {
+public class UiApp {
 
 	@RequestMapping("/")
 	public String home() {
@@ -20,6 +20,6 @@ public class UiApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(UiApplication.class, args);
+		SpringApplication.run(UiApp.class, args);
 	}
 }
