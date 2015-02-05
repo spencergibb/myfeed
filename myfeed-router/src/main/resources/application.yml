@@ -6,3 +6,27 @@ server:
 
 management:
   port: 11081
+
+security:
+  user:
+    password: user
+  ignored: /favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
+#  sessions: ALWAYS
+
+spring:
+  oauth2:
+    sso:
+      home:
+        secure: false
+        path: /favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
+      loginPath: /dashboard/login
+      logoutPath: /dashboard/logout
+    client:
+      clientId: a819b31a2358aa755df9
+      clientSecret: 2cf02e22439bfd8b7396c19567de4587dd39d4d8
+      accessTokenUri: https://github.com/login/oauth/access_token
+      userAuthorizationUri: https://github.com/login/oauth/authorize
+      clientAuthenticationScheme: form
+    resource:
+      userInfoUri: https://api.github.com/user
+      preferTokenInfo: false
