@@ -4,10 +4,10 @@ info:
 server:
   port: 11040
 
-#security:
+security:
 #  user:
 #    password: user
-#  ignored: /,/favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
+  ignored: /,/favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
 #  sessions: ALWAYS
 
 spring:

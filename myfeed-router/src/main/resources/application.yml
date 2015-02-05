@@ -6,6 +6,8 @@ server:
 
 management:
   port: 11081
+  security:
+    enabled: false
 
 security:
   user:
