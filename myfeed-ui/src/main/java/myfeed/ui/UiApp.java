@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -39,7 +41,7 @@ public class UiApp {
 
 	@RequestMapping("/message")
 	public Map<String, Object> dashboard() {
-		return Collections.<String, Object> singletonMap("message", "Yay!");
+		return Collections.singletonMap("message", "Yay!");
 	}
 
 	@RequestMapping("/user")
@@ -54,13 +56,14 @@ public class UiApp {
 
 	@Controller
 	public static class LoginErrors {
-
 		@RequestMapping("/dashboard/login")
-		public String dashboard() {
-			return "redirect:/#/";
+		public String dashboard(HttpServletRequest req) {
+			UriComponents uri = UriComponentsBuilder.fromUriString(req.getRequestURI()).build();
+			String url = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort();
+			return "redirect:"+url;
 		}
-
 	}
+
 	@Component
 	public static class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
 
@@ -83,8 +86,7 @@ public class UiApp {
 				protected void doFilterInternal(HttpServletRequest request,
 												HttpServletResponse response, FilterChain filterChain)
 						throws ServletException, IOException {
-					CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
-							.getName());
+					CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 					if (csrf != null) {
 						Cookie cookie = new Cookie("XSRF-TOKEN", csrf.getToken());
 						cookie.setPath("/");
@@ -101,6 +103,7 @@ public class UiApp {
 			return repository;
 		}
 	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(UiApp.class, args);
 	}
