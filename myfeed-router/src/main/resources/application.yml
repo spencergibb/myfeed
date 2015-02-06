@@ -12,15 +12,15 @@ management:
 security:
   user:
     password: user
-  ignored: /favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
-#  sessions: ALWAYS
+  ignored: /favicon.ico,/index.html,/dashboard.html,/home.html,/js/**,/css/**,/webjars/**
+  sessions: IF_REQUIRED
 
 spring:
   oauth2:
     sso:
       home:
         secure: false
-        path: /favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
+        path: /,/dashboard
       loginPath: /dashboard/login
       logoutPath: /dashboard/logout
     client:

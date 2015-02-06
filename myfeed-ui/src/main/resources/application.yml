@@ -7,20 +7,10 @@ server:
 security:
 #  user:
 #    password: user
-  ignored: /,/favicon.ico,/**/*.html,/js/**,/css/**,/webjars/**
-#  sessions: ALWAYS
+  ignored: /,/favicon.ico,/dashboard.html,/index.html,/home.html,/js/**,/css/**,/webjars/**
 
 spring:
   oauth2:
-#    sso:
-#      loginPath: /dashboard/login
-#      logoutPath: /dashboard/logout
-#    client:
-#      clientId: 26b451fee2dbd97f6574
-#      clientSecret: caf2566f37d38873d06d8ab24b7efea0de12927e
-#      accessTokenUri: https://github.com/login/oauth/access_token
-#      userAuthorizationUri: https://github.com/login/oauth/authorize
-#      clientAuthenticationScheme: form
     resource:
       userInfoUri: https://api.github.com/user
-#      preferTokenInfo: false
+      id: github
