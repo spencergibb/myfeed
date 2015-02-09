@@ -13,3 +13,20 @@ user apps: port
 * myfeed-feed: 11060
 * myfeed-user: 11070
 * myfeed-ui: 11070
+
+## /etc/hosts entries
+
+    127.0.0.1   www.myfeed.com
+    127.0.0.1   discovery.myfeed.com
+    127.0.0.1   config.myfeed.com
+
+## or setup dnsmasq on a mac
+
+like so (in dnsmasq.conf)
+
+    address=/myfeed.com/127.0.0.1
+
+and add the following to `/etc/resolver/myfeed.com`
+
+    nameserver 127.0.0.1
+
