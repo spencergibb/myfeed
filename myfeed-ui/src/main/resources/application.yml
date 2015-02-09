@@ -4,6 +4,11 @@ info:
 server:
   port: 11040
 
+management:
+  port: 11041
+  security:
+    enabled: false
+
 security:
 #  user:
 #    password: user
