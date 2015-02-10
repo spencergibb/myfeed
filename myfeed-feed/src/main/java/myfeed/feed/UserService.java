@@ -1,5 +1,6 @@
 package myfeed.feed;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,16 @@ public class UserService {
 	private RestTemplate rest;
 
 	@SuppressWarnings("unchecked")
+	@HystrixCommand(fallbackMethod = "defaultId")
 	public String findId(String username) {
 		ResponseEntity<Map> user = rest.getForEntity("http://myfeed-user/@spencergibb", Map.class);
 		if (user.getStatusCode().equals(HttpStatus.OK)) {
 			return (String) user.getBody().get("id");
 		}
 		return null;
+	}
+
+	public String defaultId(String username) {
+		return "";
 	}
 }

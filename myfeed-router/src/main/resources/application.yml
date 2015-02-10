@@ -15,6 +15,13 @@ security:
   ignored: /favicon.ico,/index.html,/dashboard.html,/home.html,/js/**,/css/**,/webjars/**
   sessions: IF_REQUIRED
 
+client:
+    registryFetchIntervalSeconds: 5
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+
 spring:
   oauth2:
     sso:

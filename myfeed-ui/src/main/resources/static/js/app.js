@@ -10,15 +10,22 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 				controller : 'dashboard'
 			});
 
-		}).controller('navigation', function($scope, $http, $window, $route) {
+}).service('userService', function($http) {
+        this.user = $http.get('/dashboard/user');
+        this.getUser = function() {
+            return this.user;
+        }
+}).controller('navigation', function($scope, $http, $window, $route, userService) {
 	$scope.tab = function(route) {
 		return $route.current && route === $route.current.controller;
 	};
 	if (!$scope.user) {
-		$http.get('/dashboard/user').success(function(data) {
-			$scope.user = data;
+        userService.getUser().then(function(user) {
+            console.log("user: %o", user);
+			$scope.user = user.data.principal;
 			$scope.authenticated = true;
-		}).error(function() {
+		}, function() {
+            $scope.user = null;
 			$scope.authenticated = false;
 		});
 	}
@@ -30,7 +37,21 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 			$window.location.hash = '';
 		});
 	};
-}).controller('home', function() {
+}).controller('home', function($scope, $resource, userService) {
+        userService.getUser().then(function(user) {
+            console.log("user: %o", user);
+            $resource("/feed/@"+user.data.principal, {}).get({}, function(feed) {
+                $scope.feed = feed;
+            }, function(err) {
+                console.log("Error getting feed: "+err);
+            });
+            $scope.user = user;
+            $scope.authenticated = true;
+        }, function(err) {
+            console.log("Error getting user: "+err);
+            $scope.user = null;
+            $scope.authenticated = false;
+        });
 }).controller('dashboard', function($scope, $resource) {
 
 	$resource('/dashboard/message', {}).get({}, function(data) {
