@@ -14,9 +14,10 @@ user apps: port
 * myfeed-user: 11070
 * myfeed-ui: 11070
 
-## external reqs
+## external requirements
 
 * mongodb
+* redis
 * github account
 
 ## /etc/hosts entries
