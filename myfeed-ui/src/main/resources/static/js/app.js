@@ -1,5 +1,7 @@
 angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 		function($routeProvider) {
+            //TODO: figure out html5mode
+            //$locationProvider.html5Mode(true)
 
 			$routeProvider.otherwise('/');
             $routeProvider.when('/@:username', {
