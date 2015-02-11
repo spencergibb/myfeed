@@ -36,6 +36,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 	$scope.logout = function() {
 		$http.post('/dashboard/logout', {}).success(function() {
 			delete $scope.user;
+            delete $scope.feed;
 			$scope.authenticated = false;
 			// Force reload of home page to reset all state after logout
 			$window.location.hash = '';
@@ -51,18 +52,27 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
                 feeduser = $route.current.params.username;
             }
 
-            $scope.feeduser = feeduser;
+            if (feeduser) {
+                $scope.feeduser = feeduser;
 
-            $resource("/feed/@"+ feeduser, {}).get({}, function(feed) {
-                $scope.feed = feed;
-            }, function(err) {
-                console.log("Error getting feed: "+err);
-            });
+                $resource("/feed/@" + feeduser, {}).get({}, function (feed) {
+                    $scope.feed = feed;
+                }, function (err) {
+                    console.log("Error getting feed: " + err);
+                });
 
-            $scope.user = user;
-            $scope.authenticated = true;
+                $scope.user = user;
+                $scope.authenticated = true;
+            } else {
+                $scope.feeduser = null;
+                $scope.feed = null;
+                $scope.user = null;
+                $scope.authenticated = false;
+            }
         }, function(err) {
             console.log("Error getting user: "+err);
+            $scope.feeduser = null;
+            $scope.feed = null;
             $scope.user = null;
             $scope.authenticated = false;
         });

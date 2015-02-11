@@ -4,7 +4,12 @@ info:
 server:
   port: 11050
 
+logging:
+  level:
+    org.springframework.cloud.bootstrap.encrypt: DEBUG
+
 security:
   sessions: NEVER
   user:
-    password: password
+    #ENCRYPT_KEY=foo
+    password: '{cipher}19df449ba671f057b8290ce1a16b73ed19fa6fbd76789ffd7f558fe285ef820d'

@@ -9,6 +9,10 @@ management:
   security:
     enabled: false
 
+myfeed:
+  ui:
+    login-redirect: http://www.myfeed.com:11080
+
 security:
 #  user:
 #    password: user
