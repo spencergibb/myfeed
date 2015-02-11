@@ -1,18 +1,34 @@
 # myfeed
-Myfeed is a sample cloud native application build using spring-cloud
+Myfeed is a non-trivial sample cloud native application build using:
 
-infrastucture apps: port
+* spring-cloud
+* spring-boot
+* spring-data
+
+## TODO
+
+[ ] Following
+[ ] Unfollowing
+[ ] Posting
+[ ] Profile view
+[ ] Profile edit
+[ ] Websockets update feed
+
+## Services
+
+infrastucture apps (id: default port)
 
 * myfeed-config: 11010
 * myfeed-discovery: 11020
 * myfeed-router: 11080
+* myfeed-turbine: 11090
 
-user apps: port
+user apps (id: default port)
 
 * myfeed-admin: 11050
 * myfeed-feed: 11060
 * myfeed-user: 11070
-* myfeed-ui: 11070
+* myfeed-ui: 11040
 
 ## external requirements
 
