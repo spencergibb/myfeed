@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
@@ -36,11 +37,6 @@ public class UiApp {
 		return user;
 	}
 
-	@RequestMapping("/")
-	public String home() {
-		return "Hello myfeed";
-	}
-
 	@Controller
 	public static class LoginErrors {
 		@RequestMapping("/dashboard/login")
@@ -50,8 +46,19 @@ public class UiApp {
 			String url = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort();
 			return "redirect:" + url;
 		}
+
+		@RequestMapping("/@{username}")
+		public String feed(@PathVariable("username") String username) {
+			return "forward:index.html";
+		}
+
+		@RequestMapping("/dashboard")
+		public String dashboard() {
+			return "forward:index.html";
+		}
+
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(UiApp.class, args);
 	}
