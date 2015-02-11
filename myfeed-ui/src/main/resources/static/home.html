@@ -1,3 +1,10 @@
-<h2>Home</h2>
+<div class="page-header">
+    <h1><span class="glyphicon glyphicon-th-list"></span>myfeed <small>Where all microservices come to chat.</small></h1>
+</div>
 
-<div>{{feed}}</div>
+<div ng-repeat="item in feed.content" class="panel panel-primary">
+    <div class="panel-body">{{item.text}}</div>
+    <div class="panel-footer">{{item.created}}</div>
+</div>
+
+<p class="text-muted">{{feed}}</p>
