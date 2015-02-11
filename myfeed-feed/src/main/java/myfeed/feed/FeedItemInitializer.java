@@ -8,6 +8,7 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,21 +21,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedItemInitializer {
 
 	private final FeedItemRepository repo;
-	private final UserService user;
+	private final UserService userService;
 	private final RandomText randomText;
 	private final Random random = new Random();
 
 	@Autowired
-	public FeedItemInitializer(FeedItemRepository repo, UserService user, RandomText randomText) {
+	public FeedItemInitializer(FeedItemRepository repo, UserService userService, RandomText randomText) {
 		this.repo = repo;
-		this.user = user;
+		this.userService = userService;
 		this.randomText = randomText;
 	}
 
 	@RequestMapping("/init")
 	public Iterable<FeedItem> init(@RequestParam(value = "user") String username) {
-		String userid = user.findId(username);
-		int numItems = random.nextInt(5);
+		String userid = userService.findId(username);
+		int numItems = 0;
+
+		while (numItems == 0) {
+			numItems = random.nextInt(5);
+		}
+
+		List<Resource<User>> users = userService.getUsers();
 
 		List<FeedItem> items = new ArrayList<>(numItems);
 		for (int i = numItems; i > 0; i--) {
@@ -43,7 +50,16 @@ public class FeedItemInitializer {
 			LocalDateTime dateTime = LocalDateTime.now().minusDays(i);
 			Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
 			Date created = Date.from(instant);
-			FeedItem item = new FeedItem(userid, username, text, created);
+
+			String feedUsername = username;
+
+			if (!users.isEmpty()) {
+				User user = users.get(random.nextInt(users.size())).getContent();
+				feedUsername = user.getUsername();
+			}
+
+			//TODO: figure out feed owner userid vs userid of user that posted the item
+			FeedItem item = new FeedItem(userid, feedUsername, text, created);
 			items.add(item);
 
 		}

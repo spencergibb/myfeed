@@ -2,6 +2,7 @@ package myfeed;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.ribbon.RibbonInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +49,12 @@ public class MyfeedAutoConfig {
 	}
 
 	@Bean
-	RestTemplate restTemplate(RibbonInterceptor interceptor) {
+	public RestTemplate restTemplate(RibbonInterceptor interceptor) {
 		return rest(interceptor);
+	}
+
+	@Bean
+	public TraversonFactory traversonFactory(LoadBalancerClient loadBalancerClient) {
+		return new TraversonFactory(loadBalancerClient);
 	}
 }
