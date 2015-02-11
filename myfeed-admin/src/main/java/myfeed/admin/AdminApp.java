@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,13 +65,11 @@ public class AdminApp {
 	}
 
 	@Data
+	@NoArgsConstructor
 	public static class User {
 		private String id;
 		private String username;
 		private String name;
-
-		private User() {
-		}
 	}
 
 	public static void main(String[] args) {
