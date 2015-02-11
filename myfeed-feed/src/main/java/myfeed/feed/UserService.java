@@ -20,7 +20,7 @@ public class UserService {
 	@SuppressWarnings("unchecked")
 	@HystrixCommand(fallbackMethod = "defaultId")
 	public String findId(String username) {
-		ResponseEntity<Map> user = rest.getForEntity("http://myfeed-user/@spencergibb", Map.class);
+		ResponseEntity<Map> user = rest.getForEntity("http://myfeed-user/@{username}", Map.class, username);
 		if (user.getStatusCode().equals(HttpStatus.OK)) {
 			return (String) user.getBody().get("id");
 		}

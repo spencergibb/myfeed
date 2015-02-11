@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -26,8 +27,8 @@ public class FeedItemInitializer {
 	}
 
 	@RequestMapping("/init")
-	public Iterable<FeedItem> init() {
-		String userid = user.findId("spencergibb");
+	public Iterable<FeedItem> init(@RequestParam(value = "user", defaultValue = "spencergibb") String username) {
+		String userid = user.findId(username);
 		List<FeedItem> items = Arrays.asList(new FeedItem(userid, "first text"),
 				new FeedItem(userid, "second text"));
 		Iterable<FeedItem> saved = repo.save(items);

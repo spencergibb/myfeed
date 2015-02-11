@@ -12,7 +12,8 @@ management:
 security:
   user:
     password: user
-  ignored: /favicon.ico,/index.html,/dashboard.html,/home.html,/js/**,/css/**,/webjars/**
+  #TODO: router needs to know about these?
+  ignored: /favicon.ico,/index.html,/dashboard.html,/feed.html,/js/**,/css/**,/webjars/**
   sessions: IF_REQUIRED
 
 client:

@@ -1,0 +1,25 @@
+<div class="page-header">
+    <h1><span class="glyphicon glyphicon-th-list"></span> myfeed <small>Where all microservices come to chat.</small></h1>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Feed for</h3>
+            </div>
+            <div class="panel-body">{{feeduser}}</div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div ng-repeat="item in feed.content" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{item.userid}}</h3>
+            </div>
+            <div class="panel-body">{{item.text}}</div>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
+</div>
+
+<p class="text-muted">{{feed}}</p>

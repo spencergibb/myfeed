@@ -14,8 +14,9 @@ body { padding-top: 70px; }
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
         <div ng-controller="navigation" class="container-fluid">
 
-			<a ng-class="{active:tab('home')}" class="navbar-brand" href='#/'>
-                <span class="glyphicon glyphicon-th-list"></span>myfeed</a>
+            <a ng-class="{active:tab('home')}" class="navbar-brand" href='#/'>
+                <span class="glyphicon glyphicon-th-list"></span></a>
+			<a ng-class="{active:tab('home')}" class="navbar-brand" href='#/'>myfeed</a>
             <ul class="nav navbar-nav">
                 <li ng-class="{active:tab('dashboard')}" ng-show="authenticated"><a href='#/dashboard'>dashboard</a></li>
                 <li ng-show="!authenticated"><a href='dashboard/login'>login</a></li>

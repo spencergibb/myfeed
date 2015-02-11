@@ -2,9 +2,12 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 		function($routeProvider) {
 
 			$routeProvider.otherwise('/');
-			$routeProvider.when('/', {
-				templateUrl : 'home.html',
-				controller : 'home'
+            $routeProvider.when('/@:username', {
+                templateUrl : 'feed.html',
+                controller : 'feed'
+			}).when('/', {
+				templateUrl : 'feed.html',
+				controller : 'feed'
 			}).when('/dashboard', {
 				templateUrl : 'dashboard.html',
 				controller : 'dashboard'
@@ -37,14 +40,24 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 			$window.location.hash = '';
 		});
 	};
-}).controller('home', function($scope, $resource, userService) {
+}).controller('feed', function($scope, $resource, $route, userService) {
+        console.log("feed route.current.params.username: %o", $route.current.params.username)
         userService.getUser().then(function(user) {
             console.log("user: %o", user);
-            $resource("/feed/@"+user.data.principal, {}).get({}, function(feed) {
+            var feeduser = user.data.principal;
+
+            if ($route.current.params.username) {
+                feeduser = $route.current.params.username;
+            }
+
+            $scope.feeduser = feeduser;
+
+            $resource("/feed/@"+ feeduser, {}).get({}, function(feed) {
                 $scope.feed = feed;
             }, function(err) {
                 console.log("Error getting feed: "+err);
             });
+
             $scope.user = user;
             $scope.authenticated = true;
         }, function(err) {

@@ -12,7 +12,7 @@ management:
 security:
 #  user:
 #    password: user
-  ignored: /,/favicon.ico,/dashboard.html,/index.html,/home.html,/js/**,/css/**,/webjars/**
+  ignored: /,/favicon.ico,/dashboard.html,/index.html,/feed.html,/js/**,/css/**,/webjars/**
 
 spring:
   oauth2:

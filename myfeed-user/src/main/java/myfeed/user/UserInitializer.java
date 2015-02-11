@@ -13,10 +13,17 @@ public class UserInitializer {
 
 	@Autowired
 	public UserInitializer(UserRepository repo) {
-		User user = repo.findByUsername("spencergibb");
-		if (user == null) {
-			user = repo.save(new User("spencergibb", "Spencer Gibb"));
-			log.info("Created spencergibb: "+user);
+		User[] users = new User[] {
+				new User("spencergibb", "Spencer Gibb"),
+				new User("joshlong", "Josh Long")
+		};
+
+		for (User toCreate : users) {
+			User user = repo.findByUsername(toCreate.getUsername());
+			if (user == null) {
+				user = repo.save(toCreate);
+				log.info("Created: " + user);
+			}
 		}
 	}
 }
