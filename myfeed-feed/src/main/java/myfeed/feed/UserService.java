@@ -44,7 +44,7 @@ public class UserService {
 		return "";
 	}
 
-	//@HystrixCommand(fallbackMethod = "defaultUsers")
+	@HystrixCommand(fallbackMethod = "defaultUsers")
 	public List<Resource<User>> getUsers() {
 		PagedResources<Resource<User>> users = factory.create("myfeed-user").follow("users").toObject(TYPE_REFERENCE);
 		return new ArrayList<>(users.getContent());
