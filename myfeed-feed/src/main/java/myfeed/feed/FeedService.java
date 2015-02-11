@@ -1,12 +1,8 @@
 package myfeed.feed;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -15,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-
-import de.svenjacobs.loremipsum.LoremIpsum;
 
 /**
  * @author Spencer Gibb
@@ -56,25 +50,5 @@ public class FeedService {
 
 	public static PagedResources.PageMetadata getMetadata(Page<?> page) {
 		return new PagedResources.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
-	}
-
-	@Bean
-	public RandomText randomText() {
-		return new RandomText() {
-			LoremIpsum loremIpsum = new LoremIpsum();
-
-			@Override
-			public String getText(int numWords) {
-				String lorem = loremIpsum.getWords(numWords);
-				String[] words = lorem.split(" ");
-				List<String> list = Arrays.asList(words);
-				Collections.shuffle(list);
-				return StringUtils.collectionToDelimitedString(list, " ");
-			}
-		};
-	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(FeedService.class, args);
 	}
 }
