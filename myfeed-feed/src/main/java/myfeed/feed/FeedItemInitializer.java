@@ -8,6 +8,7 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,9 @@ public class FeedItemInitializer {
 	private final RandomText randomText;
 	private final Random random = new Random();
 
+	@Value("${myfeed.feed.initializer.maxItems:10}")
+	private int maxItems;
+
 	@Autowired
 	public FeedItemInitializer(FeedItemRepository repo, UserService userService, RandomText randomText) {
 		this.repo = repo;
@@ -38,7 +42,7 @@ public class FeedItemInitializer {
 		int numItems = 0;
 
 		while (numItems == 0) {
-			numItems = random.nextInt(5);
+			numItems = random.nextInt(maxItems);
 		}
 
 		List<Resource<User>> users = userService.getUsers();
