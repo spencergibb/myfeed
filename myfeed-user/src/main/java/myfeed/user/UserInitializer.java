@@ -15,7 +15,9 @@ public class UserInitializer {
 	public UserInitializer(UserRepository repo) {
 		User[] users = new User[] {
 				new User("spencergibb", "Spencer Gibb"),
-				new User("joshlong", "Josh Long")
+				new User("joshlong", "Josh Long"),
+				new User("dsyer", "Dave Syer"),
+				new User("philwebb", "Phil Webb")
 		};
 
 		for (User toCreate : users) {

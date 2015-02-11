@@ -18,6 +18,7 @@ user apps: port
 
 * mongodb
 * redis
+* rabbitmq
 * github account
 
 ## /etc/hosts entries

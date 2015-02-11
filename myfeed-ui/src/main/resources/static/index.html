@@ -18,12 +18,12 @@
             <a ng-class="{active:tab('home')}" class="navbar-brand" href='/'>
                 <span class="glyphicon glyphicon-th-list"></span></a>
 			<a ng-class="{active:tab('home')}" class="navbar-brand" href='/'>myfeed</a>
+            <p ng-show="authenticated" class="navbar-text">Signed in as <a href="#" class="navbar-link">{{user}}</a></p>
             <ul class="nav navbar-nav">
                 <li ng-class="{active:tab('dashboard')}" ng-show="authenticated"><a href='/dashboard'>dashboard</a></li>
                 <li ng-show="!authenticated"><a href='dashboard/login'>login</a></li>
                 <li ng-show="authenticated"><a href='' ng-click="logout()">logout</a></li>
             </ul>
-            <p ng-show="authenticated" class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">{{user}}</a></p>
         </div>
     </nav>
 	<div ng-view class="container"></div>

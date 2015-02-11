@@ -1,14 +1,18 @@
 package myfeed.admin;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Data;
-
 import myfeed.Rest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Resource;
@@ -34,9 +38,21 @@ public class AdminApp {
 	@Autowired
 	Rest rest;
 
+	@Autowired
+	LoadBalancerClient loadBalancerClient;
+
 	@RequestMapping("/")
 	public ModelAndView home() {
-		return new ModelAndView("admin");
+		HashMap<String, String> map = new HashMap<>();
+		map.putAll(getUrl("myfeed-turbine", "turbineUrl"));
+		map.putAll(getUrl("myfeed-router", "routerUrl"));
+		return new ModelAndView("admin", map);
+	}
+
+	private Map<String, String> getUrl(String serviceId, String key) {
+		ServiceInstance instance = loadBalancerClient.choose(serviceId);
+		String turbineUrl = String.format("http://%s:%s", instance.getHost(), instance.getPort());
+		return Collections.singletonMap(key, turbineUrl);
 	}
 
 	@RequestMapping("/users")

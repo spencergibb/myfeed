@@ -1,0 +1,15 @@
+info:
+  description: myfeed turbine amqp service
+
+turbine:
+  port: 11090
+
+server:
+  port: ${turbine.port}
+
+management:
+  port: 11091
+
+eureka:
+  instance:
+    nonSecurePort: ${turbine.port}

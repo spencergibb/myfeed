@@ -1,5 +1,6 @@
 package myfeed.user;
 
+import myfeed.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,7 +33,11 @@ public class UserApp extends RepositoryRestMvcConfiguration {
 
 	@RequestMapping(value = "/@{username}", method = GET)
 	public User getUser(@PathVariable("username") String username) {
-		return users.findByUsername(username);
+		User user = users.findByUsername(username);
+		if (user == null) {
+			throw new NotFoundException("Not found: "+username);
+		}
+		return user;
 	}
 
 	@RequestMapping(value = "/@{username}", method = DELETE)

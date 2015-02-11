@@ -32,12 +32,20 @@ public class FeedService {
 	@HystrixCommand(fallbackMethod = "defaultFeed")
 	public Page<FeedItem> feed(String username) {
 		if (username.equals("error")) throw new RuntimeException(username);
-		Page<FeedItem> items = repo.findByUseridOrderByCreatedDesc(user.findId(username), new PageRequest(0, 20));
+		String userid = user.findId(username);
+		if (!StringUtils.hasText(userid)) {
+			return singletonFeed("Unknown user: "+username);
+		}
+		Page<FeedItem> items = repo.findByUseridOrderByCreatedDesc(userid, new PageRequest(0, 20));
 		return items;
 	}
 
 	protected Page<FeedItem> defaultFeed(String username) {
-		return new PageImpl<>(Arrays.asList(new FeedItem("1", "myfeed", "Something's not right.  Check back in a moment")));
+		return singletonFeed("Something's not right.  Check back in a moment");
+	}
+
+	private Page<FeedItem> singletonFeed(String text) {
+		return new PageImpl<>(Arrays.asList(new FeedItem("1", "myfeed", text)));
 	}
 
 	public PagedResources<FeedItem> getUserResource(String username) {

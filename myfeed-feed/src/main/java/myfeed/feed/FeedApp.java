@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,6 +39,7 @@ public class FeedApp {
 	}
 
 	@RequestMapping(value = "/@@{username}", method = GET)
+	@HystrixCommand
 	public PagedResources<FeedItem> getUserResource(@PathVariable("username") String username) {
 		return service.getUserResource(username);
 	}
