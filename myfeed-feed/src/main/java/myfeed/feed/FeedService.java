@@ -1,7 +1,5 @@
 package myfeed.feed;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
@@ -34,7 +30,7 @@ public class FeedService {
 	private UserService user;
 
 	@HystrixCommand(fallbackMethod = "defaultFeed")
-	public Page<FeedItem> feed(@PathVariable("username") String username) {
+	public Page<FeedItem> feed(String username) {
 		if (username.equals("error")) throw new RuntimeException(username);
 		Page<FeedItem> items = repo.findByUseridOrderByCreatedDesc(user.findId(username), new PageRequest(0, 20));
 		return items;
@@ -44,8 +40,7 @@ public class FeedService {
 		return new PageImpl<>(Arrays.asList(new FeedItem("1", "myfeed", "Something's not right.  Check back in a moment")));
 	}
 
-	@RequestMapping(value = "/@@{username}", method = GET)
-	public PagedResources<FeedItem> getUserResource(@PathVariable("username") String username) {
+	public PagedResources<FeedItem> getUserResource(String username) {
 		Page<FeedItem> items = repo.findByUseridOrderByCreatedDesc(user.findId(username),
 				new PageRequest(0, 20));
 		return new PagedResources<>(items.getContent(), getMetadata(items));
