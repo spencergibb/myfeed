@@ -23,6 +23,7 @@ public class FeedService {
 	@Autowired
 	private UserService user;
 
+	//TODO: use rxjava here to aggregate calls
 	@HystrixCommand(fallbackMethod = "defaultFeed")
 	public Page<FeedItem> feed(String username) {
 		if (username.equals("error")) throw new RuntimeException(username);

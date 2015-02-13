@@ -6,6 +6,7 @@ import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,16 @@ public class AdminApp {
 	}
 
 	private Map<String, String> getUrl(String serviceId, String key) {
-		ServiceInstance instance = loadBalancerClient.choose(serviceId);
-		String turbineUrl = String.format("http://%s:%s", instance.getHost(), instance.getPort());
-		return Collections.singletonMap(key, turbineUrl);
+		String url = null;
+		try {
+			ServiceInstance instance = loadBalancerClient.choose(serviceId);
+			if (instance != null) {
+				url = instance.getUri().toString();
+			}
+		} catch (IllegalStateException e) {
+			// no instances of serviceId
+		}
+		return Collections.singletonMap(key, url);
 	}
 
 	@RequestMapping("/users")
