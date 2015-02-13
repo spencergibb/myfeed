@@ -3,6 +3,7 @@ info:
 
 server:
   port: 11050
+  context-path: /admin
 
 logging:
   level:
