@@ -5,20 +5,20 @@
 
 	<parent>
 		<groupId>myfeed</groupId>
-		<artifactId>myfeed</artifactId>
+		<artifactId>myfeed-infra</artifactId>
 		<version>1.0.0.BUILD-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>myfeed-discovery</artifactId>
+	<artifactId>myfeed-turbine</artifactId>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>myfeed</groupId>
+			<artifactId>myfeed-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			<artifactId>spring-cloud-starter-turbine-amqp</artifactId>
 		</dependency>
 	</dependencies>
 </project>

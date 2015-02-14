@@ -17,14 +17,11 @@
 
 	<modules>
 		<module>myfeed-core</module>
+		<module>myfeed-infra</module>
 		<module>myfeed-admin</module>
-		<module>myfeed-config</module>
-		<module>myfeed-discovery</module>
 		<module>myfeed-feed</module>
-		<module>myfeed-router</module>
 		<module>myfeed-ui</module>
 		<module>myfeed-user</module>
-		<module>myfeed-turbine</module>
 	</modules>
 
 	<properties>
