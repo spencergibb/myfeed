@@ -13,7 +13,7 @@ security:
   user:
     password: user
   #TODO: router needs to know about these?
-  ignored: /favicon.ico,/index.html,/profile.html,/feed.html,/js/**,/css/**,/webjars/**
+  ignored: /admin/**,/favicon.ico,/index.html,/profile.html,/feed.html,/js/**,/css/**,/webjars/**
   sessions: IF_REQUIRED
 
 eureka:
