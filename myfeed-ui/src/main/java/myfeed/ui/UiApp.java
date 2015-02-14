@@ -27,11 +27,11 @@ import static org.springframework.web.util.UriComponentsBuilder.*;
 @EnableDiscoveryClient
 @EnableOAuth2Resource
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/profile")
 public class UiApp {
 
 	@RequestMapping("/message")
-	public Map<String, Object> dashboard() {
+	public Map<String, Object> profile() {
 		return Collections.singletonMap("message", "Yay!");
 	}
 
@@ -45,8 +45,8 @@ public class UiApp {
 		@Value("${myfeed.ui.login-redirect:''}")
 		private String loginRedirect;
 
-		@RequestMapping("/dashboard/login")
-		public String dashboard(HttpServletRequest req) {
+		@RequestMapping("/profile/login")
+		public String profile(HttpServletRequest req) {
 			/*String url;
 			if (StringUtils.hasText(loginRedirect)) {
 				url = loginRedirect;
@@ -63,10 +63,10 @@ public class UiApp {
 			return "forward:index.html";
 		}
 
-		@RequestMapping("/dashboard")
-		public String dashboard() {
+		/*@RequestMapping("/profile")
+		public String profile() {
 			return "forward:index.html";
-		}
+		}*/
 
 	}
 

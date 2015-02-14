@@ -13,13 +13,12 @@ security:
   user:
     password: user
   #TODO: router needs to know about these?
-  ignored: /favicon.ico,/index.html,/dashboard.html,/feed.html,/js/**,/css/**,/webjars/**
+  ignored: /favicon.ico,/index.html,/profile.html,/feed.html,/js/**,/css/**,/webjars/**
   sessions: IF_REQUIRED
 
-client:
-    registryFetchIntervalSeconds: 5
-
 eureka:
+  client:
+    registryFetchIntervalSeconds: 5
   instance:
     leaseRenewalIntervalInSeconds: 10
 
@@ -28,9 +27,9 @@ spring:
     sso:
       home:
         secure: false
-        path: /,/dashboard
-      loginPath: /dashboard/login
-      logoutPath: /dashboard/logout
+        path: /
+      loginPath: /profile/login
+      logoutPath: /profile/logout
     client:
       clientId: a819b31a2358aa755df9
       clientSecret: 2cf02e22439bfd8b7396c19567de4587dd39d4d8

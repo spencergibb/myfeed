@@ -20,8 +20,8 @@
 			<a ng-class="{active:tab('home')}" class="navbar-brand" href='/'>myfeed</a>
             <p ng-show="authenticated" class="navbar-text">Signed in as <a href="#" class="navbar-link">{{user}}</a></p>
             <ul class="nav navbar-nav">
-                <li ng-class="{active:tab('dashboard')}" ng-show="authenticated"><a href='/dashboard'>dashboard</a></li>
-                <li ng-show="!authenticated"><a href='dashboard/login'>login</a></li>
+                <li ng-class="{active:tab('profile')}" ng-show="authenticated"><a href='profile'>profile</a></li>
+                <li ng-show="!authenticated"><a href='profile/login'>login</a></li>
                 <li ng-show="authenticated"><a href='' ng-click="logout()">logout</a></li>
             </ul>
         </div>

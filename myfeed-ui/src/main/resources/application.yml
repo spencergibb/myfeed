@@ -16,7 +16,7 @@ myfeed:
 security:
 #  user:
 #    password: user
-  ignored: /,/favicon.ico,/dashboard.html,/index.html,/feed.html,/js/**,/css/**,/webjars/**
+  ignored: /,/favicon.ico,/profile.html,/index.html,/feed.html,/js/**,/css/**,/webjars/**
 
 spring:
   oauth2:
