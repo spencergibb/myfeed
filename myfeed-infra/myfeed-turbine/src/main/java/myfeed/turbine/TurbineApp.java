@@ -1,15 +1,13 @@
 package myfeed.turbine;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.netflix.turbine.amqp.EnableTurbineAmqp;
 
 /**
  * @author Spencer Gibb
  */
-@SpringBootApplication
-@EnableDiscoveryClient
+@SpringCloudApplication
 @EnableTurbineAmqp
 public class TurbineApp {
 

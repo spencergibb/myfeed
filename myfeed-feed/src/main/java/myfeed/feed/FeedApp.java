@@ -6,12 +6,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedResources;
@@ -20,14 +17,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import de.svenjacobs.loremipsum.LoremIpsum;
 
 /**
  * @author Spencer Gibb
  */
-@SpringBootApplication
-@EnableDiscoveryClient
-@EnableCircuitBreaker
+@SpringCloudApplication
 @RestController
 public class FeedApp {
 	@Autowired

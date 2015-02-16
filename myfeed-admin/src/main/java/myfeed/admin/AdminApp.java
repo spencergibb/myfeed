@@ -6,14 +6,12 @@ import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,8 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author Spencer Gibb
  */
-@SpringBootApplication
-@EnableDiscoveryClient
+@SpringCloudApplication
 @EnableHystrixDashboard
 @RestController
 @EnableRedisHttpSession
