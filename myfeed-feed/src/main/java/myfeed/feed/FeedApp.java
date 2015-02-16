@@ -32,7 +32,7 @@ public class FeedApp {
 
 	@RequestMapping(value = "/@{username}", method = GET)
 	public Page<FeedItem> feed(@PathVariable("username") String username) {
-		return service.feed(username);
+		return service.feed(username).toBlocking().first();
 	}
 
 	@RequestMapping(value = "/@@{username}", method = GET)

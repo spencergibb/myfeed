@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.netflix.hystrix.contrib.javanica.command.ObservableResult;
 import myfeed.TraversonFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import rx.Observable;
 
 /**
  * @author Spencer Gibb
@@ -31,16 +33,21 @@ public class UserService {
 	private TraversonFactory factory;
 
 	@HystrixCommand(fallbackMethod = "defaultId")
-	public String findId(String username) {
-		ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
-		if (user.getStatusCode().equals(HttpStatus.OK)) {
-			return user.getBody().getId();
-		}
-		return null;
+	public Observable<String> findId(String username) {
+		return new ObservableResult<String>() {
+			@Override
+			public String invoke() {
+				ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
+				if (user.getStatusCode().equals(HttpStatus.OK)) {
+					return user.getBody().getId();
+				}
+				return null;
+			}
+		};
 	}
 
 	public String defaultId(String username) {
-		return "";
+		return null;
 	}
 
 	@HystrixCommand(fallbackMethod = "defaultUsers")
@@ -50,7 +57,7 @@ public class UserService {
 	}
 
 	public List<Resource<User>> defaultUsers() {
-		return Collections.<Resource<User>>emptyList();
+		return Collections.emptyList();
 	}
 
 }

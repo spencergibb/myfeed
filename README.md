@@ -7,6 +7,7 @@ Myfeed is a non-trivial sample cloud native application build using:
 
 ## TODO
 
+[X] RxJava Sample
 [ ] login/logout
 [ ] Following
 [ ] Unfollowing

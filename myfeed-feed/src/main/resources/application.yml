@@ -8,3 +8,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/feeds
+
+logging:
+  level:
+    com.netflix.hystrix: DEBUG

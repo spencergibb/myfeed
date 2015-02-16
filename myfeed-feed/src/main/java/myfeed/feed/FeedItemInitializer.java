@@ -38,7 +38,7 @@ public class FeedItemInitializer {
 
 	@RequestMapping("/init")
 	public Iterable<FeedItem> init(@RequestParam(value = "user") String username) {
-		String userid = userService.findId(username);
+		String userid = userService.findId(username).toBlocking().first();
 		int numItems = 0;
 
 		while (numItems == 0) {
