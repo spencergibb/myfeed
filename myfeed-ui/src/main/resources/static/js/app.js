@@ -37,8 +37,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
                 $scope.authenticated = true;
             }
 		}, function() {
-            $scope.user = null;
-			$scope.authenticated = false;
+            clearFeed($scope);
 		});
 	}
 	$scope.logout = function() {

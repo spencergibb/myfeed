@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Spencer Gibb
  */
@@ -21,6 +24,8 @@ public class User {
 
 	@TextIndexed
 	private final String name;
+
+	private final List<String> following = new ArrayList<>();
 
 	public User(String username, String name) {
 		this.username = username;
