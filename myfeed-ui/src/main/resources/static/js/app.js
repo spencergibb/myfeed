@@ -6,7 +6,7 @@ function clearFeed($scope) {
 }
 angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 		function($routeProvider, $locationProvider) {
-            //$locationProvider.html5Mode(true);
+            $locationProvider.html5Mode(true);
 
 			$routeProvider.otherwise('/');
             $routeProvider.when('/@:username', {
@@ -32,8 +32,10 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 	if (!$scope.user) {
         userService.getUser().then(function(user) {
             console.log("nav user: %o", user);
-			$scope.user = user.data.principal;
-			$scope.authenticated = true;
+            if (user.data.principal) {
+                $scope.user = user.data.principal;
+                $scope.authenticated = true;
+            }
 		}, function() {
             $scope.user = null;
 			$scope.authenticated = false;
@@ -43,7 +45,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 		$http.post('/profile/logout', {}).success(function() {
             clearFeed($scope);
 			// Force reload of home page to reset all state after logout
-			$window.location.hash = '';
+			$window.location.href = '/';
 		});
 	};
 }).controller('feed', function($scope, $resource, $route, userService) {
