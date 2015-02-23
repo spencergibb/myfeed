@@ -27,7 +27,7 @@ spring:
     sso:
       home:
         secure: false
-        path: /
+        path: /,/profile
       loginPath: /profile/login
       logoutPath: /profile/logout
     client:

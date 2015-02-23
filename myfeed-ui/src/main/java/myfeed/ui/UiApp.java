@@ -39,25 +39,25 @@ public class UiApp {
 		@Value("${myfeed.ui.login-redirect:''}")
 		private String loginRedirect;
 
-		@RequestMapping("/profile/login")
+		/*@RequestMapping("/profile/login")
 		public String profile(HttpServletRequest req) {
-			/*String url;
+			*//*String url;
 			if (StringUtils.hasText(loginRedirect)) {
 				url = loginRedirect;
 			} else {
 				UriComponents uri = fromUriString(req.getRequestURI()).build();
 				url = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort();
 			}
-			return "redirect:" + url;*/
+			return "redirect:" + url;*//*
 			return "login please";
-		}
+		}*/
 
-		@RequestMapping("/@{username}")
+		/*@RequestMapping("/@{username}")
 		public String feed(@PathVariable("username") String username) {
 			return "forward:index.html";
 		}
 
-		/*@RequestMapping("/profile")
+		@RequestMapping("/profile")
 		public String profile() {
 			return "forward:index.html";
 		}*/

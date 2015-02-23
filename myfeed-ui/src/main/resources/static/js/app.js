@@ -1,6 +1,12 @@
+function clearFeed($scope) {
+    $scope.feeduser = null;
+    $scope.feed = null;
+    $scope.user = null;
+    $scope.authenticated = false;
+}
 angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 		function($routeProvider, $locationProvider) {
-            $locationProvider.html5Mode(true);
+            //$locationProvider.html5Mode(true);
 
 			$routeProvider.otherwise('/');
             $routeProvider.when('/@:username', {
@@ -25,7 +31,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 	};
 	if (!$scope.user) {
         userService.getUser().then(function(user) {
-            console.log("user: %o", user);
+            console.log("nav user: %o", user);
 			$scope.user = user.data.principal;
 			$scope.authenticated = true;
 		}, function() {
@@ -35,9 +41,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 	}
 	$scope.logout = function() {
 		$http.post('/profile/logout', {}).success(function() {
-			delete $scope.user;
-            delete $scope.feed;
-			$scope.authenticated = false;
+            clearFeed($scope);
 			// Force reload of home page to reset all state after logout
 			$window.location.hash = '';
 		});
@@ -45,7 +49,7 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 }).controller('feed', function($scope, $resource, $route, userService) {
         console.log("feed route.current.params.username: %o", $route.current.params.username);
         userService.getUser().then(function(user) {
-            console.log("user: %o", user);
+            console.log("feed user: %o", user);
             var feeduser = user.data.principal;
 
             if ($route.current.params.username) {
@@ -64,17 +68,11 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
                 $scope.user = user;
                 $scope.authenticated = true;
             } else {
-                $scope.feeduser = null;
-                $scope.feed = null;
-                $scope.user = null;
-                $scope.authenticated = false;
+                clearFeed($scope);
             }
         }, function(err) {
             console.log("Error getting user: "+err);
-            $scope.feeduser = null;
-            $scope.feed = null;
-            $scope.user = null;
-            $scope.authenticated = false;
+            clearFeed($scope);
         });
 }).controller('profile', function($scope, $resource) {
 

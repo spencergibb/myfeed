@@ -15,12 +15,12 @@
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
         <div ng-controller="navigation" class="container-fluid">
 
-            <a ng-class="{active:tab('home')}" class="navbar-brand" href='/'>
+            <a ng-class="{active:tab('home')}" class="navbar-brand" href='#/'>
                 <span class="glyphicon glyphicon-th-list"></span></a>
-			<a ng-class="{active:tab('home')}" class="navbar-brand" href='/'>myfeed</a>
-            <p ng-show="authenticated" class="navbar-text">Signed in as <a href="#" class="navbar-link">{{user}}</a></p>
+			<a ng-class="{active:tab('home')}" class="navbar-brand" href='#/'>myfeed</a>
+            <p ng-show="authenticated" class="navbar-text">Signed in as <a href="#/" class="navbar-link">{{user}}</a></p>
             <ul class="nav navbar-nav">
-                <li ng-class="{active:tab('profile')}" ng-show="authenticated"><a href='profile'>profile</a></li>
+                <li ng-class="{active:tab('profile')}" ng-show="authenticated"><a href='#/profile'>profile</a></li>
                 <li ng-show="!authenticated"><a href='profile/login'>login</a></li>
                 <li ng-show="authenticated"><a href='' ng-click="logout()">logout</a></li>
             </ul>
