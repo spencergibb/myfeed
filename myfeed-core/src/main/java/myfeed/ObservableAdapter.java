@@ -10,7 +10,6 @@ import rx.Observable;
 public class ObservableAdapter<T> extends DeferredResult<T> {
 
 	public ObservableAdapter(Observable<T> observable) {
-		observable.subscribe(result -> setResult(result),
-				throwable -> setErrorResult(throwable));
+		observable.subscribe(this::setResult, this::setErrorResult);
 	}
 }
