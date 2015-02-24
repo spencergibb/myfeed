@@ -2,7 +2,6 @@ package myfeed.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import lombok.Data;
@@ -13,11 +12,14 @@ import myfeed.Rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import rx.Observable;
+
+import static rx.Observable.*;
 
 /**
  * @author Spencer Gibb
@@ -35,24 +37,35 @@ public class UiController {
 
 	@RequestMapping("/ui/feed/{username}")
 	public Feed feed(@PathVariable("username") String username) {
-		HashMap<String, Object> map = new HashMap<>();
+		Observable<List<FeedItem>> feedItems = from(rest.get("http://myfeed-feed/{username}", FEED_ITEM_TYPE, username))
+				.map(HttpEntity::getBody);
 
-		return Observable.from(rest.get("http://myfeed-feed/{username}", FEED_ITEM_TYPE, username))
+		Observable<Feed> feed = getUser("http://myfeed-user/@{username}", username)
 				.map(HttpEntity::getBody)
-				.zipWith(Observable.from(rest.getForEntity("http://myfeed-user/@{username}", User.class, username))
-						.map(HttpEntity::getBody)
-						, (feedItems, user) -> {
-					Feed feed = new Feed(feedItems, user);
-					return feed;
-				})
-				.toBlocking()
-				.first();
+				.flatMap(user -> {
+					// given the user, go get each following user and return the list of usernames
+					Observable<User> u = just(user);
+					Observable<List<String>> following = from(user.getFollowing())
+							.flatMap(userid ->
+											getUser("http://myfeed-user/users/{userid}", userid)
+													.map(HttpEntity::getBody)
+													.map(User::getUsername)
+							).toList();
+					return zip(u, following, feedItems, Feed::new);
+				});
+
+		return feed.toBlocking().first();
+	}
+
+	private Observable<ResponseEntity<User>> getUser(String url, String username) {
+		return from(rest.getForEntity(url, User.class, username));
 	}
 
 	@Data
 	private static class Feed {
-		private final List<FeedItem> feed;
 		private final User profile;
+		private final List<String> following;
+		private final List<FeedItem> feed;
 	}
 
 	@Data
