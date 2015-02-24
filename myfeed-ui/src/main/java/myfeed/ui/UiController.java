@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import myfeed.AsyncRest;
+import myfeed.ObservableAdapter;
 import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.context.request.async.DeferredResult;
 import rx.Observable;
 
 import static rx.Observable.*;
@@ -36,7 +38,7 @@ public class UiController {
 	private Rest syncRest;
 
 	@RequestMapping("/ui/feed/{username}")
-	public Feed feed(@PathVariable("username") String username) {
+	public DeferredResult<Feed> feed(@PathVariable("username") String username) {
 		Observable<List<FeedItem>> feedItems = from(rest.get("http://myfeed-feed/{username}", FEED_ITEM_TYPE, username))
 				.map(HttpEntity::getBody);
 
@@ -54,7 +56,7 @@ public class UiController {
 					return zip(u, following, feedItems, Feed::new);
 				});
 
-		return feed.toBlocking().first();
+		return new ObservableAdapter<>(feed);
 	}
 
 	private Observable<ResponseEntity<User>> getUser(String url, String username) {
