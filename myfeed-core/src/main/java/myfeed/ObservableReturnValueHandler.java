@@ -2,11 +2,11 @@ package myfeed;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.async.WebAsyncUtils;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import rx.Observable;
 
-import java.util.Map;
+import rx.Observable;
 
 /**
  * @author Spencer Gibb
@@ -23,13 +23,10 @@ public class ObservableReturnValueHandler implements HandlerMethodReturnValueHan
 			return;
 		}
 
-		if (returnValue instanceof Observable) {
-			Observable observable = (Observable) returnValue;
-			mavContainer.addAttribute(observable.toBlocking().first());
-		} else {
-			// should not happen
-			throw new UnsupportedOperationException("Unexpected return type: " +
-					returnType.getParameterType().getName() + " in method: " + returnType.getMethod());
-		}
+		Observable<?> observable = Observable.class.cast(returnValue);
+
+		ObservableAdapter<?> adapter = new ObservableAdapter<>(observable);
+		WebAsyncUtils.getAsyncManager(webRequest)
+				.startDeferredResultProcessing(adapter, mavContainer);
 	}
 }

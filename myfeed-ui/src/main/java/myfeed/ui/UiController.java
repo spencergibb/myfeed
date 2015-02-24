@@ -1,5 +1,7 @@
 package myfeed.ui;
 
+import static rx.Observable.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,8 +9,6 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import myfeed.AsyncRest;
-import myfeed.ObservableAdapter;
-import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.context.request.async.DeferredResult;
 import rx.Observable;
-
-import static rx.Observable.*;
 
 /**
  * @author Spencer Gibb
@@ -34,11 +31,8 @@ public class UiController {
 	@Autowired
 	private AsyncRest rest;
 
-	@Autowired
-	private Rest syncRest;
-
 	@RequestMapping("/ui/feed/{username}")
-	public DeferredResult<Feed> feed(@PathVariable("username") String username) {
+	public Observable<Feed> feed(@PathVariable("username") String username) {
 		Observable<List<FeedItem>> feedItems = from(rest.get("http://myfeed-feed/{username}", FEED_ITEM_TYPE, username))
 				.map(HttpEntity::getBody);
 
@@ -56,7 +50,7 @@ public class UiController {
 					return zip(u, following, feedItems, Feed::new);
 				});
 
-		return new ObservableAdapter<>(feed);
+		return feed;
 	}
 
 	private Observable<ResponseEntity<User>> getUser(String url, String username) {
