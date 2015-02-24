@@ -31,8 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @EnableRedisHttpSession
 public class AdminApp {
-	public static final ParameterizedTypeReference<Resources<Resource<User>>> USERS_TYPE = new ParameterizedTypeReference<Resources<Resource<User>>>() {
-	};
+	public static final ParameterizedTypeReference<Resources<Resource<User>>> USERS_TYPE = new ParameterizedTypeReference<Resources<Resource<User>>>() {};
 
 	@Autowired
 	Rest rest;

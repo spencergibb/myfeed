@@ -2,6 +2,7 @@ function clearFeed($scope) {
     $scope.feeduser = null;
     $scope.feed = null;
     $scope.user = null;
+    $scope.profile = null;
     $scope.authenticated = false;
 }
 angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
@@ -60,8 +61,8 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
             if (feeduser) {
                 $scope.feeduser = feeduser;
 
-                $resource("/feed/@" + feeduser, {}).get({}, function (feed) {
-                    $scope.feed = feed;
+                $resource("/ui/feed/" + feeduser, {}).get({}, function (data) {
+                    $scope.data = data;
                 }, function (err) {
                     console.log("Error getting feed: " + err);
                 });

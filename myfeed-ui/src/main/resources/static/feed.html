@@ -10,9 +10,15 @@
             </div>
             <div class="panel-body">@{{feeduser}}</div>
         </div>
+        <div ng-show="feeduser" class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Following</h3>
+            </div>
+            <div class="panel-body">{{data.profile.following}}</div>
+        </div>
     </div>
     <div class="col-md-9">
-        <div ng-repeat="item in feed.content" class="panel panel-primary">
+        <div ng-repeat="item in data.feed" class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">@{{item.username}}</h3>
             </div>

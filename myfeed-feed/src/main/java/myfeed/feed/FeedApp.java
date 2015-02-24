@@ -30,6 +30,11 @@ public class FeedApp {
 	@Autowired
 	private FeedService service;
 
+	@RequestMapping(value = "/{username}", method = GET)
+	public List<FeedItem> feedList(@PathVariable("username") String username) {
+		return service.feed(username).toBlocking().first().getContent();
+	}
+
 	@RequestMapping(value = "/@{username}", method = GET)
 	public Page<FeedItem> feed(@PathVariable("username") String username) {
 		return service.feed(username).toBlocking().first();

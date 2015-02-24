@@ -4,9 +4,6 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
@@ -36,32 +33,15 @@ public class UiApp {
 
 	@Controller
 	public static class LoginErrors {
-		@Value("${myfeed.ui.login-redirect:''}")
-		private String loginRedirect;
-
-		/*@RequestMapping("/profile/login")
-		public String profile(HttpServletRequest req) {
-			*//*String url;
-			if (StringUtils.hasText(loginRedirect)) {
-				url = loginRedirect;
-			} else {
-				UriComponents uri = fromUriString(req.getRequestURI()).build();
-				url = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort();
-			}
-			return "redirect:" + url;*//*
-			return "login please";
-		}*/
-
-		/*@RequestMapping("/@{username}")
+		@RequestMapping("/@{username}")
 		public String feed(@PathVariable("username") String username) {
 			return "forward:index.html";
 		}
 
-		@RequestMapping("/profile")
+		/*@RequestMapping("/profile")
 		public String profile() {
 			return "forward:index.html";
 		}*/
-
 	}
 
 	public static void main(String[] args) {

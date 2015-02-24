@@ -23,7 +23,10 @@ public class UserInitializer {
 				new User("spencergibb", "Spencer Gibb"),
 				new User("joshlong", "Josh Long"),
 				new User("dsyer", "Dave Syer"),
-				new User("philwebb", "Phil Webb")
+				new User("philwebb", "Phil Webb"),
+				new User("dussab", "Brian Dussault"),
+				new User("rwinch", "Rob Winch"),
+				new User("pperalta", "Patrick Peralta")
 		};
 
 		for (User toCreate : users) {
