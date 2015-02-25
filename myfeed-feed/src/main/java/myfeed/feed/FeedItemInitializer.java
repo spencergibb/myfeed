@@ -29,6 +29,12 @@ public class FeedItemInitializer {
 	@Value("${myfeed.feed.initializer.maxItems:10}")
 	private int maxItems;
 
+	@Value("${myfeed.feed.initializer.minWords:5}")
+	private int minWords;
+
+	@Value("${myfeed.feed.initializer.maxWords:20}")
+	private int maxWords;
+
 	@Autowired
 	public FeedItemInitializer(FeedItemRepository repo, UserService userService, RandomText randomText) {
 		this.repo = repo;
@@ -36,20 +42,39 @@ public class FeedItemInitializer {
 		this.randomText = randomText;
 	}
 
+	@RequestMapping("/init/all")
+	public Map<String, Iterable<FeedItem>> initAll() {
+		List<Resource<User>> users = userService.getUsers();
+		LinkedHashMap<String, Iterable<FeedItem>> items = new LinkedHashMap<>();
+
+		for (Resource<User> user : users) {
+			String username = user.getContent().getUsername();
+			Iterable<FeedItem> feedItems = initUser(username, users);
+			items.put(username, feedItems);
+		}
+		return items;
+	}
+
 	@RequestMapping("/init")
 	public Iterable<FeedItem> init(@RequestParam(value = "user") String username) {
+		List<Resource<User>> users = userService.getUsers();
+		return initUser(username, users);
+	}
+
+	private Iterable<FeedItem> initUser(String username, List<Resource<User>> users) {
 		String userid = userService.findId(username).toBlocking().first();
 		int numItems = 0;
-
 		while (numItems == 0) {
 			numItems = random.nextInt(maxItems);
 		}
 
-		List<Resource<User>> users = userService.getUsers();
-
 		List<FeedItem> items = new ArrayList<>(numItems);
 		for (int i = numItems; i > 0; i--) {
-			int numWords = random.nextInt(20);
+			int numWords = 0;
+			while (numWords < minWords) {
+				numWords = random.nextInt(maxWords);
+			}
+
 			String text = randomText.getText(numWords);
 			LocalDateTime dateTime = LocalDateTime.now().minusDays(i);
 			Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
@@ -62,7 +87,6 @@ public class FeedItemInitializer {
 				feedUsername = user.getUsername();
 			}
 
-			//TODO: figure out feed owner userid vs userid of user that posted the item
 			FeedItem item = new FeedItem(userid, feedUsername, text, created);
 			items.add(item);
 

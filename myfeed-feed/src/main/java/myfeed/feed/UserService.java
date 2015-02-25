@@ -30,7 +30,7 @@ public class UserService {
 	private RestTemplate rest;
 
 	@Autowired
-	private TraversonFactory factory;
+	private TraversonFactory traverson;
 
 	@HystrixCommand(fallbackMethod = "defaultId")
 	public Observable<String> findId(String username) {
@@ -52,7 +52,7 @@ public class UserService {
 
 	@HystrixCommand(fallbackMethod = "defaultUsers")
 	public List<Resource<User>> getUsers() {
-		PagedResources<Resource<User>> users = factory.create("myfeed-user").follow("users").toObject(TYPE_USERS);
+		PagedResources<Resource<User>> users = traverson.create("myfeed-user").follow("users").toObject(TYPE_USERS);
 		return new ArrayList<>(users.getContent());
 	}
 
