@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.cloud.netflix.ribbon.RibbonInterceptor;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -34,14 +34,14 @@ import java.util.List;
 public class MyfeedAutoConfig {
 
 	@Bean
-	public Rest rest(RibbonInterceptor interceptor) {
+	public Rest rest(LoadBalancerInterceptor interceptor) {
 		Rest restTemplate = new Rest();
 		configureRest(interceptor, restTemplate);
 
 		return restTemplate;
 	}
 
-	private void configureRest(RibbonInterceptor interceptor, Rest restTemplate) {
+	private void configureRest(LoadBalancerInterceptor interceptor, Rest restTemplate) {
 		restTemplate.setInterceptors(Arrays.asList(interceptor));
 
 		List<HttpMessageConverter<?>> converters = getHttpMessageConverters();
@@ -73,7 +73,7 @@ public class MyfeedAutoConfig {
 	}
 
 	@Bean
-	public AsyncRest asyncRest(RibbonInterceptor interceptor, LoadBalancerClient loadBalancer) {
+	public AsyncRest asyncRest(LoadBalancerInterceptor interceptor, LoadBalancerClient loadBalancer) {
 		RibbonAsyncClientHttpRequestFactory requestFactory = asyncRequestFactory(loadBalancer);
 		Rest rest = new Rest(requestFactory);
 		configureRest(interceptor, rest);
@@ -83,12 +83,12 @@ public class MyfeedAutoConfig {
 	}
 
 	@Bean
-	public RestTemplate restTemplate(RibbonInterceptor interceptor) {
+	public RestTemplate restTemplate(LoadBalancerInterceptor interceptor) {
 		return rest(interceptor);
 	}
 
 	@Bean
-	public AsyncRestTemplate asyncRestTemplate(RibbonInterceptor interceptor, LoadBalancerClient loadBalancer) {
+	public AsyncRestTemplate asyncRestTemplate(LoadBalancerInterceptor interceptor, LoadBalancerClient loadBalancer) {
 		return asyncRest(interceptor, loadBalancer);
 	}
 
