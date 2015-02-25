@@ -1,6 +1,6 @@
 package myfeed.feed;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,10 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import de.svenjacobs.loremipsum.LoremIpsum;
 
@@ -30,9 +29,14 @@ public class FeedApp {
 	@Autowired
 	private FeedService service;
 
-	@RequestMapping(value = "/{username}", method = GET)
+	@RequestMapping(value = "/list/{username}", method = GET)
 	public List<FeedItem> feedList(@PathVariable("username") String username) {
 		return service.feed(username).toBlocking().first().getContent();
+	}
+
+	@RequestMapping(value = "/@{username}", method = POST)
+	public FeedItem addFeedItem(@PathVariable("username") String username, @RequestBody String text) {
+		return service.addFeedItem(username, text);
 	}
 
 	@RequestMapping(value = "/@{username}", method = GET)
@@ -41,7 +45,7 @@ public class FeedApp {
 	}
 
 	@RequestMapping(value = "/@@{username}", method = GET)
-	@HystrixCommand
+	//@HystrixCommand
 	public PagedResources<FeedItem> getUserResource(@PathVariable("username") String username) {
 		return service.getUserResource(username);
 	}

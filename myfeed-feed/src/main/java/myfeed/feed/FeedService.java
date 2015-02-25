@@ -2,6 +2,7 @@ package myfeed.feed;
 
 import java.util.Arrays;
 
+import myfeed.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +37,15 @@ public class FeedService {
 
 	private Page<FeedItem> singletonFeed(String text) {
 		return new PageImpl<>(Arrays.asList(new FeedItem("1", "myfeed", text)));
+	}
+
+	public FeedItem addFeedItem(String username, String text) {
+		String userid = user.findId(username).toBlocking().first();
+		if (userid == null) {
+			throw new NotFoundException("username: "+username);
+		}
+		FeedItem feedItem = repo.save(new FeedItem(userid, username, text));
+		return feedItem;
 	}
 
 	//TODO: Observable

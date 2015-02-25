@@ -33,7 +33,7 @@ public class UiController {
 
 	@RequestMapping("/ui/feed/{username}")
 	public Observable<Feed> feed(@PathVariable("username") String username) {
-		Observable<List<FeedItem>> feedItems = from(rest.get("http://myfeed-feed/{username}", FEED_ITEM_TYPE, username))
+		Observable<List<FeedItem>> feedItems = from(rest.get("http://myfeed-feed/list/{username}", FEED_ITEM_TYPE, username))
 				.map(HttpEntity::getBody);
 
 		Observable<Feed> feed = getUser("http://myfeed-user/@{username}", username)
