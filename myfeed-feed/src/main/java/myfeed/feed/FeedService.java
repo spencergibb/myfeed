@@ -1,13 +1,20 @@
 package myfeed.feed;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import myfeed.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.StringUtils;
@@ -17,9 +24,13 @@ import rx.Observable;
  * @author Spencer Gibb
  */
 @Service
+@Slf4j
 public class FeedService {
 	@Autowired
 	FeedItemRepository repo;
+
+	@Autowired
+	ApplicationEventPublisher publisher;
 
 	@Autowired
 	UserService user;
@@ -45,6 +56,7 @@ public class FeedService {
 			throw new NotFoundException("username: "+username);
 		}
 		FeedItem feedItem = repo.save(new FeedItem(userid, username, text));
+		publisher.publishEvent(new FeedItemEvent(feedItem));
 		return feedItem;
 	}
 
@@ -53,6 +65,31 @@ public class FeedService {
 		Page<FeedItem> items = repo.findByUseridOrderByCreatedDesc(user.findId(username).toBlocking().first(),
 				new PageRequest(0, 20));
 		return new PagedResources<>(items.getContent(), getMetadata(items));
+	}
+
+	//TODO: send to rabbit queue and process queue
+	@Async
+	public void propagate(FeedItem feedItem) {
+		String username = feedItem.getUsername();
+		String userid = user.findId(username).toBlocking().first();
+		List<Resource<User>> following = user.getFollowing(userid);
+		List<FeedItem> toSave = new ArrayList<>();
+		for (Resource<User> user : following) {
+			String followingUserid = getId(user);
+			String followingUsername = user.getContent().getUsername();
+			log.info("Saving feed item to {}:{}", followingUsername, followingUserid);
+			toSave.add(new FeedItem(followingUserid, feedItem.getUsername(),
+					feedItem.getText(), feedItem.getCreated()));
+		}
+		Iterable<FeedItem> saved = repo.save(toSave);
+		log.info("Saved: "+saved);
+	}
+
+	//FIXME: getId from entity, not link
+	private String getId(Resource<User> user) {
+		Link link = user.getLink(Link.REL_SELF);
+		String[] strings = link.getHref().split("/");
+		return strings[strings.length - 1];
 	}
 
 	public static PagedResources.PageMetadata getMetadata(Page<?> page) {

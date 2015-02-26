@@ -1,8 +1,9 @@
 package myfeed.feed;
 
-import com.mongodb.DBObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,9 +11,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class FeedItemListener extends AbstractMongoEventListener<FeedItem> {
+public class FeedItemListener implements ApplicationListener<FeedItemEvent> {
+
+	@Autowired
+	FeedService service;
+
 	@Override
-	public void onAfterSave(FeedItem feedItem, DBObject dbo) {
-		log.info("Saved feedItem: {}", feedItem);
+	public void onApplicationEvent(FeedItemEvent event) {
+		log.info("Propagate feedItem: {}", event.getFeedItem());
+		service.propagate(event.getFeedItem());
 	}
 }

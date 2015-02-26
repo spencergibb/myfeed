@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ import de.svenjacobs.loremipsum.LoremIpsum;
  */
 @SpringCloudApplication
 @RestController
-public class FeedApp {
+public class FeedApp extends RepositoryRestMvcConfiguration {
 	@Autowired
 	private FeedService service;
 
@@ -48,6 +50,11 @@ public class FeedApp {
 	//@HystrixCommand
 	public PagedResources<FeedItem> getUserResource(@PathVariable("username") String username) {
 		return service.getUserResource(username);
+	}
+
+	@Override
+	protected void configureRepositoryRestConfiguration( RepositoryRestConfiguration config) {
+		config.exposeIdsFor(FeedItem.class);
 	}
 
 	@Bean
