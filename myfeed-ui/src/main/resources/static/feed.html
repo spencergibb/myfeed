@@ -14,8 +14,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Following</h3>
             </div>
-            <ul ng-repeat="followed in data.following" class="list-group">
-                <li class="list-group-item"><a href="/@{{followed}}">@{{followed}}</a></li>
+            <ul class="list-group">
+                <li ng-repeat="followed in data.following" class="list-group-item"><a href="/@{{followed}}">@{{followed}}</a></li>
             </ul>
         </div>
     </div>

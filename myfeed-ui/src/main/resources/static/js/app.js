@@ -80,9 +80,11 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
 
 	$resource('/profile/view', {}).get({}, function(data) {
 		$scope.profile = data.profile;
+        $scope.following = data.following;
 	}, function(err) {
         console.log("Error getting message: "+err);
-		$scope.profile = '';
+		$scope.profile = null;
+        $scope.following = null;
 	});
 
 });
