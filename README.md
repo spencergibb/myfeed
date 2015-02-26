@@ -11,7 +11,7 @@ Myfeed is a non-trivial sample cloud native application build using:
 - [X] Following
 - [X] login/logout
 - [X] Posting
-- [ ] Post feed items to following users
+- [X] Post feed items to following users
 - [ ] Websockets update feed: https://spring.io/guides/gs/messaging-stomp-websocket/
 - [ ] Unfollowing
 - [ ] Profile view
