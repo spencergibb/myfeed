@@ -6,18 +6,18 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import myfeed.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import org.springframework.util.StringUtils;
+
 import rx.Observable;
 
 /**
@@ -75,7 +75,7 @@ public class FeedService {
 		List<Resource<User>> following = user.getFollowing(userid);
 		List<FeedItem> toSave = new ArrayList<>();
 		for (Resource<User> user : following) {
-			String followingUserid = getId(user);
+			String followingUserid = user.getContent().getUserId(); //getId(user);
 			String followingUsername = user.getContent().getUsername();
 			log.info("Saving feed item to {}:{}", followingUsername, followingUserid);
 			toSave.add(new FeedItem(followingUserid, feedItem.getUsername(),
@@ -83,13 +83,6 @@ public class FeedService {
 		}
 		Iterable<FeedItem> saved = repo.save(toSave);
 		log.info("Saved: "+saved);
-	}
-
-	//FIXME: getId from entity, not link
-	private String getId(Resource<User> user) {
-		Link link = user.getLink(Link.REL_SELF);
-		String[] strings = link.getHref().split("/");
-		return strings[strings.length - 1];
 	}
 
 	public static PagedResources.PageMetadata getMetadata(Page<?> page) {

@@ -1,5 +1,6 @@
 package myfeed.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -37,5 +38,10 @@ public class User {
 		this.username = null;
 		this.name = null;
 		this.id = null;
+	}
+
+	@JsonProperty("userId")
+	public String getId() {
+		return id;
 	}
 }

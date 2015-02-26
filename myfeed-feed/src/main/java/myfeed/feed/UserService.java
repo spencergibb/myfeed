@@ -42,7 +42,7 @@ public class UserService {
 			public String invoke() {
 				ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
 				if (user.getStatusCode().equals(HttpStatus.OK)) {
-					return user.getBody().getId();
+					return user.getBody().getUserId();
 				}
 				return null;
 			}

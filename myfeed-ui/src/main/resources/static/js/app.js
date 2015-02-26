@@ -78,11 +78,11 @@ angular.module('sso', [ 'ngRoute', 'ngResource' ]).config(
         });
 }).controller('profile', function($scope, $resource) {
 
-	$resource('/profile/message', {}).get({}, function(data) {
-		$scope.message = data.message;
+	$resource('/profile/view', {}).get({}, function(data) {
+		$scope.profile = data.profile;
 	}, function(err) {
         console.log("Error getting message: "+err);
-		$scope.message = '';
+		$scope.profile = '';
 	});
 
 });

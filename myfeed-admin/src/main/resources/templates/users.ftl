@@ -7,7 +7,7 @@
 
 <ul>
 <#list users as user>
-    <li>${user.content.username}: ${user.content.name} ${user.content.id!""}</li>
+    <li>${user.content.username}: ${user.content.name} ${user.content.userId!""}</li>
 </#list>
 </ul>
 </body>

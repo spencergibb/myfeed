@@ -2,7 +2,6 @@ package myfeed.ui;
 
 import static rx.Observable.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,12 +73,4 @@ public class UiController {
 		private Date created;
 	}
 
-	@Data
-	@NoArgsConstructor
-	private static class User {
-		private String id;
-		private String username;
-		private String name;
-		private List<String> following = new ArrayList<>();
-	}
 }

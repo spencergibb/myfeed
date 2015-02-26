@@ -63,7 +63,6 @@ public class AdminApp {
 	@RequestMapping("/users")
 	@SuppressWarnings("unchecked")
 	public ModelAndView users() {
-		//TODO: why doesn't ID show up
 		ResponseEntity<Resources<Resource<User>>> response = rest.get("http://myfeed-user/users", USERS_TYPE);
 		return new ModelAndView("users", Collections.singletonMap("users", response.getBody().getContent()));
 	}
@@ -71,7 +70,7 @@ public class AdminApp {
 	@Data
 	@NoArgsConstructor
 	public static class User {
-		private String id;
+		private String userId;
 		private String username;
 		private String name;
 	}
