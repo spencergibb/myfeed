@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import myfeed.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.SpringCloudApplication;
@@ -39,11 +40,15 @@ public class AdminApp {
 	@Autowired
 	LoadBalancerClient loadBalancerClient;
 
+	@Value("${myfeed.discovery.url:http://discovery.myfeed.com:11010}")
+	private String discoveryUrl;
+
 	@RequestMapping("/")
 	public ModelAndView home() {
 		HashMap<String, String> map = new HashMap<>();
 		map.putAll(getUrl("myfeed-turbine", "turbineUrl"));
 		map.putAll(getUrl("myfeed-router", "routerUrl"));
+		map.put("discoveryUrl", discoveryUrl);
 		return new ModelAndView("admin", map);
 	}
 

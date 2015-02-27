@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
+<head>
+    <title>Myfeed Admin</title>
+</head>
 <body>
 <h2>Myfeed Admin</h2>
 <ul>
@@ -13,6 +15,7 @@
     <li><a href="hystrix/monitor?stream=${turbineUrl}">hystrix turbine</a> </li>
 </#if>
     <li><a href="users">Users</a> </li>
+    <li><a href="${discoveryUrl}">Discovery</a> </li>
 </ul>
 </body>
 
