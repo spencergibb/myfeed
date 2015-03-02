@@ -54,13 +54,9 @@ public class AdminApp {
 
 	private Map<String, String> getUrl(String serviceId, String key) {
 		String url = null;
-		try {
-			ServiceInstance instance = loadBalancerClient.choose(serviceId);
-			if (instance != null) {
-				url = instance.getUri().toString();
-			}
-		} catch (IllegalStateException e) {
-			// no instances of serviceId
+		ServiceInstance instance = loadBalancerClient.choose(serviceId);
+		if (instance != null) {
+			url = instance.getUri().toString();
 		}
 		return Collections.singletonMap(key, url);
 	}

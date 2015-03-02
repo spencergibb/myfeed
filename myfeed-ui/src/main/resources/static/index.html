@@ -22,6 +22,7 @@
             <ul class="nav navbar-nav">
                 <li ng-class="{active:tab('profile')}" ng-show="authenticated"><a href='/profile'>profile</a></li>
                 <li ng-show="!authenticated"><a href='profile/login' target="_self">login</a></li>
+                <li ng-show="authenticated"><a href='/admin/' target="_self">admin</a></li>
                 <li ng-show="authenticated"><a href='' ng-click="logout()">logout</a></li>
             </ul>
         </div>
