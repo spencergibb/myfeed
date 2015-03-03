@@ -7,7 +7,7 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import myfeed.AsyncRest;
+import myfeed.core.AsyncRest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;

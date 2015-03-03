@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import org.springframework.web.context.request.async.DeferredResult;
 import rx.Observable;

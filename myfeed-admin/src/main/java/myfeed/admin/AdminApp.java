@@ -6,7 +6,7 @@ import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import myfeed.Rest;
+import myfeed.core.Rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

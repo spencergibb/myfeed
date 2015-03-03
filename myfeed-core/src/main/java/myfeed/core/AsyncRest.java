@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.task.AsyncListenableTaskExecutor;

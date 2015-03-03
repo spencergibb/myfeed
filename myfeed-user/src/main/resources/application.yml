@@ -8,3 +8,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/users
+  jackson:
+    serialization:
+      indent_output: true

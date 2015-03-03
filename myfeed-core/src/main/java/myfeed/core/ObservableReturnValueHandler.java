@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;

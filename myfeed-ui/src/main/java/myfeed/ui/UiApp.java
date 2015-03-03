@@ -6,7 +6,7 @@ import java.security.Principal;
 import java.util.List;
 
 import lombok.Data;
-import myfeed.AsyncRest;
+import myfeed.core.AsyncRest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

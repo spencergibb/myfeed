@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

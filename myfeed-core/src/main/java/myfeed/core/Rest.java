@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import java.util.List;
 

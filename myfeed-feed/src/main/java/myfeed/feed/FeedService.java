@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import myfeed.NotFoundException;
+import myfeed.core.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;

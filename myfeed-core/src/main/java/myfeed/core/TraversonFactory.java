@@ -1,4 +1,4 @@
-package myfeed;
+package myfeed.core;
 
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;

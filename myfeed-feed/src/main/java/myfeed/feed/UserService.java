@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.netflix.hystrix.contrib.javanica.command.ObservableResult;
-import myfeed.TraversonFactory;
+import myfeed.core.TraversonFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
