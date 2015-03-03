@@ -97,6 +97,11 @@ public class MyfeedAutoConfig {
 		return new TraversonFactory(loadBalancerClient);
 	}
 
+	@Bean
+	public WhoAmIController whoAmIController() {
+		return new WhoAmIController();
+	}
+
 	@Configuration
 	@ConditionalOnClass(Observable.class)
 	public static class WebConfig extends WebMvcConfigurerAdapter {
