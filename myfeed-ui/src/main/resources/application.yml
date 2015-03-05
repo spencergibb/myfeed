@@ -5,7 +5,7 @@ server:
   port: 11040
 
 management:
-  port: 11041
+#  port: 11041
   security:
     enabled: false
 

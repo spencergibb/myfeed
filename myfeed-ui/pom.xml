@@ -11,6 +11,15 @@
 
 	<artifactId>myfeed-ui</artifactId>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.skife.maven</groupId>
+				<artifactId>really-executable-jar-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>myfeed</groupId>
