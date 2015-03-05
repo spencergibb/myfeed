@@ -11,6 +11,7 @@ import myfeed.core.AsyncRest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import rx.Observable;
  */
 @SpringCloudApplication
 @EnableOAuth2Resource
+@EnableFeignClients
 @RestController
 @RequestMapping("/profile")
 public class UiApp {
