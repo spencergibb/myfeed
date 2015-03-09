@@ -1,0 +1,26 @@
+info:
+  description: myfeed sidecar service
+
+server:
+  port: 11100
+spring:
+  application:
+    name: sidecarTest
+
+sidecar:
+  port: 8000
+  health-uri: http://localhost:8000/src/test/resources/health.json
+
+ribbon:
+  ServerListRefreshInterval: 5000
+  ReadTimeout: 7777
+
+endpoints:
+  refresh:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+
