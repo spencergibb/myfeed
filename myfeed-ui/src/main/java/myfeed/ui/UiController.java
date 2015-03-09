@@ -2,8 +2,10 @@ package myfeed.ui;
 
 import static rx.Observable.*;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +32,14 @@ public class UiController {
 
 	@Autowired
 	private FeedClient feedClient;
+
+    @Autowired
+    private FeatureService featureService;
+
+    @RequestMapping("/ui/features")
+    public Map<String, String> features() {
+        return Collections.singletonMap("featureAaaFlag", featureService.getFeatureAaaFlag());
+    }
 
 	@RequestMapping("/ui/feed/{username}")
 	public Observable<Feed> feed(@PathVariable("username") String username) {
