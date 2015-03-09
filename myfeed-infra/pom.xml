@@ -15,6 +15,7 @@
 		<module>myfeed-config</module>
 		<module>myfeed-discovery</module>
 		<module>myfeed-router</module>
+		<module>myfeed-sidecar</module>
 		<module>myfeed-turbine</module>
 	</modules>
 </project>
