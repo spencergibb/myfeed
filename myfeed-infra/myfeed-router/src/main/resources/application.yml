@@ -25,6 +25,8 @@ eureka:
 ribbon:
   ServerListRefreshInterval: 5000
 
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 15000
+
 spring:
   oauth2:
     sso:
