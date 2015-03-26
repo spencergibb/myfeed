@@ -35,6 +35,7 @@ public class FeedService {
 	@Autowired
 	UserService user;
 
+    //@HystrixCommand
 	public Observable<Page<FeedItem>> feed(String username) {
 		return user.findId(username)
 				.filter(StringUtils::hasText)

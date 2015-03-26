@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
+import org.springframework.cloud.client.loadbalancer.RestTemplateCustomizer;
+import org.springframework.cloud.netflix.ribbon.RibbonClientHttpRequestFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -33,17 +36,15 @@ import java.util.List;
 @Configuration
 public class MyfeedAutoConfig {
 
-	@Bean
-	public Rest rest(LoadBalancerInterceptor interceptor) {
-		Rest restTemplate = new Rest();
-		configureRest(interceptor, restTemplate);
+    @Bean
+    public RestTemplateCustomizer restTemplateCustomizer(final RibbonClientHttpRequestFactory requestFactory) {
+        return restTemplate -> {
+            restTemplate.setRequestFactory(requestFactory);
+            addConverters(restTemplate);
+        };
+    }
 
-		return restTemplate;
-	}
-
-	private void configureRest(LoadBalancerInterceptor interceptor, Rest restTemplate) {
-		restTemplate.setInterceptors(Arrays.asList(interceptor));
-
+	private void addConverters(RestTemplate restTemplate) {
 		List<HttpMessageConverter<?>> converters = getHttpMessageConverters();
 		restTemplate.setMessageConverters(converters);
 	}
@@ -76,15 +77,18 @@ public class MyfeedAutoConfig {
 	public AsyncRest asyncRest(LoadBalancerInterceptor interceptor, LoadBalancerClient loadBalancer) {
 		RibbonAsyncClientHttpRequestFactory requestFactory = asyncRequestFactory(loadBalancer);
 		Rest rest = new Rest(requestFactory);
-		configureRest(interceptor, rest);
+		addConverters(rest);
 		AsyncRest asyncRest = new AsyncRest(requestFactory, rest);
 		asyncRest.setMessageConverters(getHttpMessageConverters());
 		return asyncRest;
 	}
 
 	@Bean
-	public RestTemplate restTemplate(LoadBalancerInterceptor interceptor) {
-		return rest(interceptor);
+    @LoadBalanced
+	public RestTemplate loadBalancedRestTemplate(RestTemplateCustomizer customizer) {
+        Rest rest = new Rest();
+        customizer.customize(rest);
+        return rest;
 	}
 
 	@Bean
