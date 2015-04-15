@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rx.Observable;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author Spencer Gibb
  */
@@ -42,8 +44,8 @@ public class UiController {
     }
 
 	@RequestMapping("/ui/feed/{username}")
-	public Observable<Feed> feed(@PathVariable("username") String username) {
-		Observable<List<FeedItem>> feedItems = from(feedClient.feedItems(username))
+	public Observable<Feed> feed(@PathVariable("username") String username, HttpSession session) {
+		Observable<List<FeedItem>> feedItems = from(feedClient.feedItems(username).getBody())
 				.toList();
 
 		Observable<Feed> feed = getUser("http://myfeed-user/@{username}", username)
@@ -57,7 +59,7 @@ public class UiController {
 													.map(HttpEntity::getBody)
 													.map(User::getUsername)
 							).toList();
-					return zip(u, following, feedItems, Feed::new);
+					return zip(u, following, feedItems, just(session.getId()), Feed::new);
 				});
 
 		return feed;
@@ -66,7 +68,7 @@ public class UiController {
 	@FeignClient("myfeed-feed")
 	public static interface FeedClient {
 		@RequestMapping(value = "/list/{username}", method = RequestMethod.GET)
-		public List<FeedItem> feedItems(@PathVariable("username") String username);
+		public ResponseEntity<List<FeedItem>> feedItems(@PathVariable("username") String username);
 	}
 
 	private Observable<ResponseEntity<User>> getUser(String url, String username) {
@@ -78,6 +80,7 @@ public class UiController {
 		private final User profile;
 		private final List<String> following;
 		private final List<FeedItem> feed;
+		private final String sessionId;
 	}
 
 	@Data
