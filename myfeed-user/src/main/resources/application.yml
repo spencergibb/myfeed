@@ -11,3 +11,22 @@ spring:
   jackson:
     serialization:
       indent_output: true
+      
+info.git.tags: '@git.tags@'
+info.git.branch: '@git.branch@'
+info.git.dirty: '@git.dirty@'
+info.git.remote.origin.url: '@git.remote.origin.url@'
+ 
+info.git.commit.id: '@git.commit.id@'
+info.git.commit.id.abbrev: '@git.commit.id.abbrev@'
+info.git.commit.id.describe: '@git.commit.id.describe@'
+info.git.commit.id.describe-short: '@git.commit.id.describe-short@'
+info.git.commit.user.name: '@git.commit.user.name@'
+info.git.commit.user.email: '@git.commit.user.email@'
+info.git.commit.message.full: '@git.commit.message.full@'
+info.git.commit.message.short: '@git.commit.message.short@'
+info.git.commit.time: '@git.commit.time@'
+ 
+info.git.build.user.name: '@git.build.user.name@'
+info.git.build.user.email: '@git.build.user.email@'
+info.git.build.time: '@git.build.time@'

@@ -23,6 +23,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -39,6 +45,18 @@
 			<plugin>
 				<groupId>org.skife.maven</groupId>
 				<artifactId>really-executable-jar-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<configuration>
+					<!-- Configure the location of the .git directory. -->
+					<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

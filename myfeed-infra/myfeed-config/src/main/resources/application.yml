@@ -1,10 +1,25 @@
 spring:
   cloud:
     config:
+      enabled: false
       server:
         git:
           uri: git@github.com:spencergibb/myfeed-config.git
-      enabled: false
+        health:
+          repositories:
+            myfeed-ui:
+              profiles: default
+            myfeed-ui-dev:
+              name: myfeed-ui
+              profiles: development
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
 
 eureka:
   client:

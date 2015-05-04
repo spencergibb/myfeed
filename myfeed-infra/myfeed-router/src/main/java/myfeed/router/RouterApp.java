@@ -30,7 +30,7 @@ import org.springframework.web.util.WebUtils;
 @SpringCloudApplication
 @EnableZuulProxy
 @EnableOAuth2Sso
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 public class RouterApp {
 
 	public static void main(String[] args) {

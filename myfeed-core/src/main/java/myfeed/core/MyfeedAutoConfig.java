@@ -86,9 +86,14 @@ public class MyfeedAutoConfig {
 	@Bean
     @LoadBalanced
 	public RestTemplate loadBalancedRestTemplate(RestTemplateCustomizer customizer) {
-        Rest rest = new Rest();
-        customizer.customize(rest);
-        return rest;
+		return rest(customizer);
+	}
+
+	@Bean
+	public Rest rest(RestTemplateCustomizer customizer) {
+		Rest rest = new Rest();
+		customizer.customize(rest);
+		return rest;
 	}
 
 	@Bean
