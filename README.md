@@ -5,6 +5,20 @@ Myfeed is a non-trivial sample cloud native application build using:
 * spring-boot
 * spring-data
 
+# build
+
+Java 8. We use the [takari/maven-wrapper](https://github.com/takari/maven-wrapper).
+
+```
+./mvnw clean package
+```
+
+or (on windows)
+
+```
+mvnw.bat clean package
+```
+
 ## TODO
 
 - [X] RxJava Sample
