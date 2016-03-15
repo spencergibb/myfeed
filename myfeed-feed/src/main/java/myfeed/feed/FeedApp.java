@@ -32,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @SpringCloudApplication
 @EnableRedisRepositories
-@EnableBinding( {Source.class, Sink.class} )
+@EnableBinding(FeedBinder.class)
 @IntegrationComponentScan
 @RestController
 public class FeedApp extends RepositoryRestConfigurerAdapter {

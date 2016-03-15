@@ -18,6 +18,9 @@ public class TraversonFactory {
 
 	public Traverson create(String serviceId) {
 		ServiceInstance instance = loadBalancerClient.choose(serviceId);
+		if (instance == null) {
+			throw new IllegalStateException("No instances for service: "+serviceId);
+		}
 		return new Traverson(instance.getUri(), MediaTypes.HAL_JSON);
 	}
 }

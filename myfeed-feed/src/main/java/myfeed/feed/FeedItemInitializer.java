@@ -11,6 +11,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Resource;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,7 @@ import rx.Single;
  * @author Spencer Gibb
  */
 @RestController
+@MessageEndpoint
 @Slf4j
 public class FeedItemInitializer {
 
@@ -69,8 +72,12 @@ public class FeedItemInitializer {
 	}
 
 	Observable<UserFeedItem> initUser(String username) {
-		int numItems = getNumItems(minItems, maxItems);
 		Single<String> userid = userService.findId(username);
+		return initUser(username, userid);
+	}
+
+	Observable<UserFeedItem> initUser(String username, Single<String> userid) {
+		int numItems = getNumItems(minItems, maxItems);
 
 		return Observable.range(0, numItems)
 				.map(i -> numItems - i)
@@ -87,6 +94,12 @@ public class FeedItemInitializer {
 					userFeedItem.feedItem = saved;
 					return userFeedItem;
 				});
+	}
+
+	@ServiceActivator(inputChannel = FeedBinder.USER_INITIALIZED)
+	public void handleUserInited(User user) {
+		this.initUser(user.getUsername(), Single.just(user.getUserId()))
+				.forEach(feedItem -> log.info("Initialized user {} with feed item {}", user, feedItem));
 	}
 
 	@Data

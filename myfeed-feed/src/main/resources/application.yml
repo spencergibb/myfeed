@@ -5,9 +5,13 @@ server:
   port: 11060
 
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost/feeds
+  cloud:
+    stream:
+      bindings:
+        userinitialized:
+          destination: userinit
+          content-type: application/x-java-object;type=myfeed.feed.User
+          group: feeduserinit
 
 logging:
   level:

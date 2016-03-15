@@ -5,9 +5,12 @@ server:
   port: 11070
 
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost/users
+  cloud:
+    stream:
+      bindings:
+        userinitialized:
+          destination: userinit
+          contentType: application/json
   jackson:
     serialization:
       indent_output: true

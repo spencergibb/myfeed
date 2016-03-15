@@ -1,24 +1,36 @@
 package myfeed.user;
 
-import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Lists;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Spencer Gibb
  */
 @Component
 @Slf4j
-public class UserInitializer {
+public class UserInitializer implements ApplicationRunner {
 
 	private final Random random = new Random();
+	private final UserRepository repo;
+	private final UserIntializedSender sender;
 
 	@Autowired
-	public UserInitializer(UserRepository repo) {
+	public UserInitializer(UserRepository repo, UserIntializedSender sender) {
+		this.repo = repo;
+		this.sender = sender;
+	}
+
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
 		User[] users = new User[] {
 				new User("spencergibb", "Spencer Gibb"),
 				new User("joshlong", "Josh Long"),
@@ -51,15 +63,14 @@ public class UserInitializer {
 					}
 				}
 
+				if (toUpdate.getFollowing().contains(toUpdate.getId())) {
+					toUpdate.getFollowing().remove(toUpdate.getId());
+					log.info("Updated, removed self from following: " + toUpdate);
+				}
+
 				User saved = repo.save(toUpdate);
+				sender.send(saved);
 				log.info("Updated: " + saved);
-			}
-
-			if (toUpdate.getFollowing().contains(toUpdate.getId())) {
-				toUpdate.getFollowing().remove(toUpdate.getId());
-
-				User saved = repo.save(toUpdate);
-				log.info("Updated, removed self from following: " + saved);
 			}
 		}
 	}
