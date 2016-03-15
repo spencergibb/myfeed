@@ -1,5 +1,5 @@
 info:
-  description: myfeed turbine amqp service
+  description: myfeed turbine stream service
 
 turbine:
   port: 11090

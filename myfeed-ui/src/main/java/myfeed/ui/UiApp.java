@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
+//import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import rx.Observable;
+import rx.Single;
 
 /**
  * @author Spencer Gibb
  */
 @SpringCloudApplication
-@EnableOAuth2Resource
+//@EnableOAuth2Resource
 @EnableFeignClients
 @EnableConfigurationProperties
 @RestController
@@ -41,8 +42,13 @@ public class UiApp {
 	private AsyncRest rest;
 
 	@RequestMapping("/view")
-	public Observable<Profile> profile(Principal principal) {
-		return from(rest.getForEntity("http://myfeed-user/@{username}", User.class, principal.getName()))
+	public Single<Profile> profile(Principal principal) {
+		return profile(principal.getName());
+	}
+
+	@RequestMapping("/view/{username}")
+	public Single<Profile> profile(@PathVariable String username) {
+		return from(rest.getForEntity("http://myfeed-user/@{username}", User.class, username))
 				.map(HttpEntity::getBody)
 				.flatMap(user -> {
 					Observable<User> u = just(user);
@@ -53,7 +59,7 @@ public class UiApp {
 													.map(User::getUsername)
 							).toList();
 					return zip(u, following, Profile::new);
-				});
+				}).toSingle();
 	}
 
 	@Data

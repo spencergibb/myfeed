@@ -1,16 +1,16 @@
 package myfeed.user;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-
 import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * @author Spencer Gibb
  */
-public interface UserRepository extends PagingAndSortingRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, String> { //PagingAndSortingRepository<User, String> {
 
-	public User findByUsername(@Param("username") String username);
-	public String deleteByUsername(@Param("username") String username);
-	public List<User> findByFollowing(@Param("userId") String userId);
+	User findByUsername(@Param("username") String username);
+	String deleteByUsername(@Param("username") String username);
+	List<User> findByFollowing(@Param("userId") String userId);
 }

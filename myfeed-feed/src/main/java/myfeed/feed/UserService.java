@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.netflix.hystrix.contrib.javanica.command.ObservableResult;
 import myfeed.core.TraversonFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +36,11 @@ public class UserService {
 
 	@HystrixCommand(fallbackMethod = "defaultId")
 	public Observable<String> findId(String username) {
-		return new ObservableResult<String>() {
-			@Override
-			public String invoke() {
-				ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
-				if (user.getStatusCode().equals(HttpStatus.OK)) {
-					return user.getBody().getUserId();
-				}
-				return null;
-			}
-		};
+		ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
+		if (user.getStatusCode().equals(HttpStatus.OK)) {
+			return Observable.just(user.getBody().getUserId());
+		}
+		return Observable.empty();
 	}
 
 	public String defaultId(String username) {

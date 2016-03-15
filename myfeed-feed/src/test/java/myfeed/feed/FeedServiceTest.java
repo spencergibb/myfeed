@@ -65,25 +65,25 @@ public class FeedServiceTest {
 
 	@Test
 	public void feed() {
-		when(repo.findByUseridOrderByCreatedDesc(eq(USERID), isA(PageRequest.class)))
-				.thenReturn(new PageImpl<>(Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT), new FeedItem(USERID, USERNAME, FEEDTEXT+"2"))));
+		when(repo.findByUserid(eq(USERID)))//, isA(PageRequest.class)))
+				.thenReturn(Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT), new FeedItem(USERID, USERNAME, FEEDTEXT+"2")));
 		when(user.findId(USERNAME)).thenReturn(Observable.just(USERID));
 
 		FeedService service = createService();
 
-		Observable<Page<FeedItem>> feed = service.feed(USERNAME);
+		Observable<List<FeedItem>> feed = service.feed(USERNAME);
 
 		assertNotNull("feed was null", feed);
-		Page<FeedItem> page = feed.toBlocking().first();
-		assertEquals("wront page size", 2, page.getNumberOfElements());
-		List<FeedItem> content = page.getContent();
+		List<FeedItem> content = feed.toBlocking().first();
+		//assertEquals("wrong page size", 2, page.getNumberOfElements());
+		//List<FeedItem> content = page.getContent();
 		FeedItem item = content.get(0);
 		assertNotNull("null item id", item.getId());
 		assertEquals("wrong item userid", USERID, item.getUserid());
 		assertEquals("wrong item username", USERNAME, item.getUsername());
 		assertEquals("wrong item text", FEEDTEXT, item.getText());
 
-		verify(repo).findByUseridOrderByCreatedDesc(eq(USERID), isA(PageRequest.class));
+		verify(repo).findByUserid(eq(USERID)); //, isA(PageRequest.class));
 		verify(user).findId(USERNAME);
 	}
 
@@ -92,12 +92,12 @@ public class FeedServiceTest {
 		when(user.findId(USERNAME)).thenReturn(Observable.just(null));
 
 		FeedService service = createService();
-		Observable<Page<FeedItem>> feed = service.feed(USERNAME);
+		Observable<List<FeedItem>> feed = service.feed(USERNAME);
 
 		assertNotNull("feed was null", feed);
-		Page<FeedItem> page = feed.toBlocking().first();
-		assertEquals("wront page size", 1, page.getNumberOfElements());
-		List<FeedItem> content = page.getContent();
+		//Page<FeedItem> page = feed.toBlocking().first();
+		//assertEquals("wront page size", 1, page.getNumberOfElements());
+		List<FeedItem> content = feed.toBlocking().first(); //page.getContent();
 		FeedItem item = content.get(0);
 		assertEquals("wrong item text", "Unknown user: "+USERNAME, item.getText());
 

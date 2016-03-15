@@ -1,7 +1,5 @@
 package myfeed.ui;
 
-import static rx.Observable.*;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import rx.Observable;
+import rx.Single;
 
 import javax.servlet.http.HttpSession;
 
@@ -44,35 +43,32 @@ public class UiController {
     }
 
 	@RequestMapping("/ui/feed/{username}")
-	public Observable<Feed> feed(@PathVariable("username") String username, HttpSession session) {
-		Observable<List<FeedItem>> feedItems = from(feedClient.feedItems(username).getBody())
-				.toList();
-
-		Observable<Feed> feed = getUser("http://myfeed-user/@{username}", username)
+	public Single<Feed> feed(@PathVariable("username") String username, HttpSession session) {
+		Single<Feed> feed = getUser("http://myfeed-user/@{username}", username)
 				.map(HttpEntity::getBody)
 				.flatMap(user -> {
 					// given the user, go get each following user and return the list of usernames
-					Observable<User> u = just(user);
-					Observable<List<String>> following = from(user.getFollowing())
-							.flatMap(userid ->
-											getUser("http://myfeed-user/users/{userid}", userid)
+					Observable<User> u = Observable.just(user);
+					Observable<List<FeedItem>> feedItems = feedClient.feedItems(user.getUsername());
+					Observable<List<String>> following = Observable.from(user.getFollowing())
+							.flatMap(userid -> getUser("http://myfeed-user/users/{userid}", userid)
 													.map(HttpEntity::getBody)
 													.map(User::getUsername)
 							).toList();
-					return zip(u, following, feedItems, just(session.getId()), Feed::new);
-				});
+					return Observable.zip(u, following, feedItems, Observable.just(session.getId()), Feed::new);
+				}).toSingle();
 
 		return feed;
 	}
 
 	@FeignClient("myfeed-feed")
-	public static interface FeedClient {
+	public interface FeedClient {
 		@RequestMapping(value = "/list/{username}", method = RequestMethod.GET)
-		public ResponseEntity<List<FeedItem>> feedItems(@PathVariable("username") String username);
+		Observable<List<FeedItem>> feedItems(@PathVariable("username") String username);
 	}
 
 	private Observable<ResponseEntity<User>> getUser(String url, String username) {
-		return from(rest.getForEntity(url, User.class, username));
+		return Observable.from(rest.getForEntity(url, User.class, username));
 	}
 
 	@Data

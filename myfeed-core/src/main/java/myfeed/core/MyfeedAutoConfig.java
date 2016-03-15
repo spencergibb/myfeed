@@ -1,9 +1,10 @@
 package myfeed.core;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
@@ -19,16 +20,9 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import rx.Observable;
 
-import javax.annotation.PostConstruct;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Spencer Gibb
@@ -111,27 +105,4 @@ public class MyfeedAutoConfig {
 		return new WhoAmIController();
 	}
 
-	@Configuration
-	@ConditionalOnClass(Observable.class)
-	public static class WebConfig extends WebMvcConfigurerAdapter {
-		@Autowired
-		private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-
-		@Bean
-		public ObservableReturnValueHandler observableReturnValueHandler() {
-			return new ObservableReturnValueHandler();
-		}
-
-		@PostConstruct
-		public void init() {
-			final List<HandlerMethodReturnValueHandler> originalHandlers = new ArrayList<>(requestMappingHandlerAdapter.getReturnValueHandlers());
-			originalHandlers.add(0, observableReturnValueHandler());
-			requestMappingHandlerAdapter.setReturnValueHandlers(originalHandlers);
-		}
-
-		/*@Override
-		public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-			returnValueHandlers.add(0, observableReturnValueHandler());
-		}*/
-	}
 }

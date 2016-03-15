@@ -6,20 +6,20 @@ server:
 
 management:
 #  port: 11041
-  security:
-    enabled: false
+#  security:
+#    enabled: false
 
 myfeed:
   ui:
     login-redirect: http://www.myfeed.com:11080
 
-security:
+#security:
 #  user:
 #    password: user
-  ignored: /,/favicon.ico,/profile.html,/index.html,/feed.html,/js/**,/css/**,/webjars/**,/ui/features
+#  ignored: /,/favicon.ico,/profile.html,/index.html,/feed.html,/js/**,/css/**,/webjars/**,/ui/features
 
-spring:
-  oauth2:
-    resource:
-      userInfoUri: https://api.github.com/user
-      id: github
+#spring:
+#  oauth2:
+#    resource:
+#      userInfoUri: https://api.github.com/user
+#      id: github

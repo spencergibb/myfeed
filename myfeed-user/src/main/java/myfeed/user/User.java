@@ -3,9 +3,8 @@ package myfeed.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +13,16 @@ import java.util.List;
  * @author Spencer Gibb
  */
 @Data
-@Document
+@RedisHash("users")
 public class User {
 
 	@Id
 	private final String id;
 
-	@Indexed(unique = true)
+	@Indexed
 	private final String username;
 
-	@TextIndexed
+	@Indexed
 	private final String name;
 
 	private final List<String> following = new ArrayList<>();

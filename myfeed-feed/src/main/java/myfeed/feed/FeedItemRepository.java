@@ -1,14 +1,15 @@
 package myfeed.feed;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
  * @author Spencer Gibb
  */
-public interface FeedItemRepository extends PagingAndSortingRepository<FeedItem, String> {
+public interface FeedItemRepository extends CrudRepository<FeedItem, String> { //PagingAndSortingRepository<FeedItem, String> {
 
-	public Page<FeedItem> findByUseridOrderByCreatedDesc(@Param("userid") String userid, Pageable pageable);
+	//Page<FeedItem> findByUseridOrderByCreatedDesc(@Param("userid") String userid, Pageable pageable);
+	List<FeedItem> findByUserid(@Param("userid") String userid);
 }

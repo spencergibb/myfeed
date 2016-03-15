@@ -2,9 +2,8 @@ package myfeed.feed;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -14,19 +13,20 @@ import java.util.UUID;
  * @author Spencer Gibb
  */
 @Data
-@Document
+@RedisHash("feeditems")
 public class FeedItem {
 
 	@Id
 	private final String id;
 
 	@NotNull
+	@Indexed
 	private final String userid;
 
 	@NotNull
 	private final String username;
 
-	@TextIndexed
+	//@TextIndexed
 	private final String text;
 
 	@Indexed

@@ -27,6 +27,10 @@ mvnw.bat clean package
 - [X] Posting
 - [X] Post feed items to following users
 - [X] Profile view
+- [ ] Create UI View using stream, replace live aggregating with uiview
+- [ ] Security
+- [ ] RedisSession
+- [ ] Spring Restdocs
 - [ ] Websockets update feed: https://spring.io/guides/gs/messaging-stomp-websocket/
 - [ ] Non-java service
 - [ ] Unfollowing
@@ -50,9 +54,7 @@ user apps (id: default port)
 
 ## external requirements
 
-* mongodb
 * redis
-* rabbitmq
 * github account
 
 ## /etc/hosts entries
@@ -66,6 +68,7 @@ user apps (id: default port)
 like so (in dnsmasq.conf)
 
     address=/myfeed.com/127.0.0.1
+    listen-address=127.0.0.1
 
 and add the following to `/etc/resolver/myfeed.com`
 

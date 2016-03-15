@@ -1,7 +1,5 @@
 package myfeed.feed;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -10,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Page;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.hateoas.PagedResources;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,19 +18,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.svenjacobs.loremipsum.LoremIpsum;
+import rx.Single;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Spencer Gibb
  */
 @SpringCloudApplication
 @RestController
-public class FeedApp extends RepositoryRestMvcConfiguration {
+@EnableRedisRepositories
+public class FeedApp extends RepositoryRestConfigurerAdapter {
 	@Autowired
 	private FeedService service;
 
 	@RequestMapping(value = "/list/{username}", method = GET)
-	public List<FeedItem> feedList(@PathVariable("username") String username) {
-		return service.feed(username).toBlocking().first().getContent();
+	public Single<List<FeedItem>> feedList(@PathVariable("username") String username) {
+		return service.feed(username).toSingle();
 	}
 
 	@RequestMapping(value = "/@{username}", method = POST)
@@ -42,18 +44,18 @@ public class FeedApp extends RepositoryRestMvcConfiguration {
 	}
 
 	@RequestMapping(value = "/@{username}", method = GET)
-	public Page<FeedItem> feed(@PathVariable("username") String username) {
-		return service.feed(username).toBlocking().first();
+	public Single<List<FeedItem>> feed(@PathVariable("username") String username) {
+		return service.feed(username).toSingle();
 	}
 
 	@RequestMapping(value = "/@@{username}", method = GET)
 	//@HystrixCommand
-	public PagedResources<FeedItem> getUserResource(@PathVariable("username") String username) {
+	public List<FeedItem> getUserResource(@PathVariable("username") String username) {
 		return service.getUserResource(username);
 	}
 
 	@Override
-	protected void configureRepositoryRestConfiguration( RepositoryRestConfiguration config) {
+	public void configureRepositoryRestConfiguration( RepositoryRestConfiguration config) {
 		config.exposeIdsFor(FeedItem.class);
 	}
 
