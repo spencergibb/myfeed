@@ -1,5 +1,6 @@
 package myfeed.feed;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 	private String userId;
 	private String username;

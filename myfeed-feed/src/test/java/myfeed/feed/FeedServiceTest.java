@@ -10,12 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import rx.Observable;
+import rx.Single;
 import rx.plugins.DebugHook;
 import rx.plugins.DebugNotification;
 import rx.plugins.DebugNotificationListener;
 import rx.plugins.RxJavaPlugins;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -57,6 +61,7 @@ public class FeedServiceTest {
 
 	@Mock private FeedItemRepository repo;
 	@Mock private UserService user;
+	@Mock private FeedItemSubmitter feedItemSubmitter;
 
 	@Before
 	public void setup() {
@@ -66,16 +71,16 @@ public class FeedServiceTest {
 	@Test
 	public void feed() {
 		when(repo.findByUserid(eq(USERID)))//, isA(PageRequest.class)))
-				.thenReturn(Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT), new FeedItem(USERID, USERNAME, FEEDTEXT+"2")));
-		when(user.findId(USERNAME)).thenReturn(Observable.just(USERID));
+				.thenReturn(Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT, Date.from(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC))), new FeedItem(USERID, USERNAME, FEEDTEXT+"2")));
+		when(user.findId(USERNAME)).thenReturn(Single.just(USERID));
 
-		FeedService service = createService();
+		FeedService service = new FeedService(user, repo, feedItemSubmitter);
 
 		Observable<List<FeedItem>> feed = service.feed(USERNAME);
 
 		assertNotNull("feed was null", feed);
 		List<FeedItem> content = feed.toBlocking().first();
-		//assertEquals("wrong page size", 2, page.getNumberOfElements());
+		assertEquals("wrong size", 2, content.size());
 		//List<FeedItem> content = page.getContent();
 		FeedItem item = content.get(0);
 		assertNotNull("null item id", item.getId());
@@ -89,25 +94,17 @@ public class FeedServiceTest {
 
 	@Test
 	public void feedNotFound() {
-		when(user.findId(USERNAME)).thenReturn(Observable.just(null));
+		when(user.findId(USERNAME)).thenReturn(Single.just(null));
 
-		FeedService service = createService();
+		FeedService service = new FeedService(user, repo, feedItemSubmitter);
 		Observable<List<FeedItem>> feed = service.feed(USERNAME);
 
 		assertNotNull("feed was null", feed);
-		//Page<FeedItem> page = feed.toBlocking().first();
-		//assertEquals("wront page size", 1, page.getNumberOfElements());
 		List<FeedItem> content = feed.toBlocking().first(); //page.getContent();
+		assertEquals("wrong feed size", 1, content.size());
 		FeedItem item = content.get(0);
 		assertEquals("wrong item text", "Unknown user: "+USERNAME, item.getText());
 
 		verify(user).findId(USERNAME);
-	}
-
-	private FeedService createService() {
-		FeedService service = new FeedService();
-		service.user = user;
-		service.repo = repo;
-		return service;
 	}
 }

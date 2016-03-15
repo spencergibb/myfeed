@@ -1,10 +1,6 @@
 package myfeed.feed;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
-import myfeed.core.TraversonFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+import myfeed.core.TraversonFactory;
 import rx.Observable;
+import rx.Single;
 
 /**
  * @author Spencer Gibb
@@ -35,34 +34,35 @@ public class UserService {
 	private TraversonFactory traverson;
 
 	@HystrixCommand(fallbackMethod = "defaultId")
-	public Observable<String> findId(String username) {
+	public Single<String> findId(String username) {
 		ResponseEntity<User> user = rest.getForEntity("http://myfeed-user/@{username}", User.class, username);
 		if (user.getStatusCode().equals(HttpStatus.OK)) {
-			return Observable.just(user.getBody().getUserId());
+			return Single.just(user.getBody().getUserId());
 		}
-		return Observable.empty();
+		return Single.just(null);
 	}
 
-	public String defaultId(String username) {
-		return null;
+	public Single<String> defaultId(String username) {
+		return Single.just(null);
 	}
 
 	@HystrixCommand(fallbackMethod = "defaultUsers")
-	public List<Resource<User>> getUsers() {
+	Observable<Resource<User>> getUsers() {
 		PagedResources<Resource<User>> users = traverson.create("myfeed-user").follow("users").toObject(TYPE_PAGED_USERS);
-		return new ArrayList<>(users.getContent());
+		return Observable.from(users.getContent());
 	}
 
-	public List<Resource<User>> defaultUsers() {
-		return Collections.emptyList();
+	@SuppressWarnings("unsued") // see getUsers()
+	Observable<Resource<User>> defaultUsers() {
+		return Observable.empty();
 	}
 
-	public List<Resource<User>> getFollowing(String userid) {
+	public Observable<Resource<User>> getFollowing(String userid) {
 		Resources<Resource<User>> users = traverson.create("myfeed-user")
 				.follow("users", "search", "findByFollowing")
 				.withTemplateParameters(Collections.singletonMap("userId", userid))
 				.toObject(TYPE_USERS);
 
-		return new ArrayList<>(users.getContent());
+		return Observable.from(users.getContent());
 	}
 }

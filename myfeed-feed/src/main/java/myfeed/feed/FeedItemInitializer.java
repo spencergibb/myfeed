@@ -1,11 +1,12 @@
 package myfeed.feed;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.ZoneOffset;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,12 @@ import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import rx.Observable;
+import rx.Single;
 
 /**
  * @author Spencer Gibb
@@ -26,14 +33,17 @@ public class FeedItemInitializer {
 	private final RandomText randomText;
 	private final Random random = new Random();
 
+	@Value("${myfeed.feed.initializer.maxItems:0}")
+	int minItems = 0;
+
 	@Value("${myfeed.feed.initializer.maxItems:10}")
-	private int maxItems;
+	int maxItems = 10;
 
 	@Value("${myfeed.feed.initializer.minWords:5}")
-	private int minWords;
+	int minWords = 5;
 
 	@Value("${myfeed.feed.initializer.maxWords:20}")
-	private int maxWords;
+	int maxWords = 20;
 
 	@Autowired
 	public FeedItemInitializer(FeedItemRepository repo, UserService userService, RandomText randomText) {
@@ -43,55 +53,67 @@ public class FeedItemInitializer {
 	}
 
 	@RequestMapping("/init/all")
-	public Map<String, Iterable<FeedItem>> initAll() {
-		List<Resource<User>> users = userService.getUsers();
-		LinkedHashMap<String, Iterable<FeedItem>> items = new LinkedHashMap<>();
-
-		for (Resource<User> user : users) {
-			String username = user.getContent().getUsername();
-			Iterable<FeedItem> feedItems = initUser(username, users);
-			items.put(username, feedItems);
-		}
-		return items;
+	public Single<Map<String, Collection<FeedItem>>> initAll() {
+		return userService.getUsers()
+				.map(Resource::getContent)
+				.map(User::getUsername)
+				.flatMap(this::initUser)
+				.toMultimap(ufi -> ufi.username, ufi -> ufi.feedItem).toSingle();
 	}
 
 	@RequestMapping("/init")
-	public Iterable<FeedItem> init(@RequestParam(value = "user") String username) {
-		List<Resource<User>> users = userService.getUsers();
-		return initUser(username, users);
+	public Single<List<FeedItem>> init(@RequestParam(value = "user") String username) {
+		return initUser(username)
+				.map(UserFeedItem::getFeedItem)
+				.toList().toSingle();
 	}
 
-	private Iterable<FeedItem> initUser(String username, List<Resource<User>> users) {
-		String userid = userService.findId(username).toBlocking().first();
+	Observable<UserFeedItem> initUser(String username) {
+		int numItems = getNumItems(minItems, maxItems);
+		Single<String> userid = userService.findId(username);
+
+		return Observable.range(0, numItems)
+				.map(i -> numItems - i)
+				.flatMap(i -> {
+					Single<String> text = Single.just(randomText.getText(getNumItems(minWords, maxWords)));
+					LocalDateTime dateTime = LocalDateTime.now().minusDays(i);
+					Single<Date> created = Single.just(Date.from(dateTime.toInstant(ZoneOffset.UTC)));
+					Single<String> feedUsername = getRandomUsername(username);
+					Single<FeedItem> feedItem = Single.zip(userid, feedUsername, text, created, FeedItem::new);
+					return Single.zip(Single.just(username), feedItem, UserFeedItem::new).toObservable();
+				})
+				.map(userFeedItem -> {
+					FeedItem saved = repo.save(userFeedItem.feedItem);
+					userFeedItem.feedItem = saved;
+					return userFeedItem;
+				});
+	}
+
+	@Data
+	@AllArgsConstructor
+	class UserFeedItem {
+		String username;
+		FeedItem feedItem;
+	}
+
+	private int getNumItems(int min, int bound) {
 		int numItems = 0;
-		while (numItems == 0) {
-			numItems = random.nextInt(maxItems);
+		while (numItems <= min) {
+			numItems = random.nextInt(bound);
 		}
+		return numItems;
+	}
 
-		List<FeedItem> items = new ArrayList<>(numItems);
-		for (int i = numItems; i > 0; i--) {
-			int numWords = 0;
-			while (numWords < minWords) {
-				numWords = random.nextInt(maxWords);
-			}
 
-			String text = randomText.getText(numWords);
-			LocalDateTime dateTime = LocalDateTime.now().minusDays(i);
-			Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
-			Date created = Date.from(instant);
+	Single<String> getRandomUsername(String defaultUsername) {
+		List<String> usernames = userService.getUsers()
+				.map(Resource::getContent)
+				.map(User::getUsername)
+				.toList().toBlocking().first();
 
-			String feedUsername = username;
-
-			if (!users.isEmpty()) {
-				User user = users.get(random.nextInt(users.size())).getContent();
-				feedUsername = user.getUsername();
-			}
-
-			FeedItem item = new FeedItem(userid, feedUsername, text, created);
-			items.add(item);
-
+		if (usernames.isEmpty()) {
+			return Single.just(defaultUsername);
 		}
-		Iterable<FeedItem> saved = repo.save(items);
-		return saved;
+		return Single.just(usernames.get(random.nextInt(usernames.size())));
 	}
 }
