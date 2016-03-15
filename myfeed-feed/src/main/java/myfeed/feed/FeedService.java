@@ -31,15 +31,15 @@ public class FeedService {
     //@HystrixCommand(fallbackMethod = "defaultFeed")
 	public Observable<List<FeedItem>> feed(String username) {
 		return user.findId(username).toObservable()
-				.map(userid -> {
+				.flatMap(userid -> {
 					if (StringUtils.hasText(userid)) {
-						return repo.findByUserid(userid);
+						return Observable.from(repo.findByUserid(userid));
 					} else {
-						return singletonFeed("Unknown user: " + username);
+						return Observable.just(singletonFeed("Unknown user: " + username));
 					}
 				})
 				// sort by created desc since redis repo doesn't support order
-				.flatMapIterable(feedItem -> feedItem)
+				.flatMapIterable(feedItems -> feedItems)
 				.toSortedList((feedItem1, feedItem2) -> feedItem2.getCreated().compareTo(feedItem1.getCreated()));
 	}
 
@@ -66,13 +66,6 @@ public class FeedService {
 					}
 				})
 				.map(repo::save).toSingle();
-	}
-
-	public Observable<FeedItem> getUserResource(String username) {
-		return this.user.findId(username)
-				.map(repo::findByUserid)
-				.toObservable()
-				.flatMapIterable(feedItems -> feedItems);
 	}
 
 	@ServiceActivator(inputChannel = Sink.INPUT)

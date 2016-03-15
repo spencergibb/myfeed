@@ -1,14 +1,20 @@
 package myfeed.feed;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+
+import com.google.common.util.concurrent.SettableFuture;
+
 import rx.Observable;
 import rx.Single;
 import rx.plugins.DebugHook;
@@ -16,14 +22,11 @@ import rx.plugins.DebugNotification;
 import rx.plugins.DebugNotificationListener;
 import rx.plugins.RxJavaPlugins;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Spencer Gibb
@@ -70,8 +73,9 @@ public class FeedServiceTest {
 
 	@Test
 	public void feed() {
+		List<FeedItem> feedItems = Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT, Date.from(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC))), new FeedItem(USERID, USERNAME, FEEDTEXT + "2"));
 		when(repo.findByUserid(eq(USERID)))//, isA(PageRequest.class)))
-				.thenReturn(Arrays.asList(new FeedItem(USERID, USERNAME, FEEDTEXT, Date.from(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC))), new FeedItem(USERID, USERNAME, FEEDTEXT+"2")));
+				.thenReturn(toFuture(feedItems));
 		when(user.findId(USERNAME)).thenReturn(Single.just(USERID));
 
 		FeedService service = new FeedService(user, repo, feedItemSubmitter);
@@ -90,6 +94,12 @@ public class FeedServiceTest {
 
 		verify(repo).findByUserid(eq(USERID)); //, isA(PageRequest.class));
 		verify(user).findId(USERNAME);
+	}
+
+	private SettableFuture<List<FeedItem>> toFuture(List<FeedItem> feedItems) {
+		SettableFuture<List<FeedItem>> future = SettableFuture.create();
+		future.set(feedItems);
+		return future;
 	}
 
 	@Test

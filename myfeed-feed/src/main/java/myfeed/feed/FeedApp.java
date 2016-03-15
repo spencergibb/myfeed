@@ -57,7 +57,7 @@ public class FeedApp extends RepositoryRestConfigurerAdapter {
 	@RequestMapping(value = "/@@{username}", method = GET)
 	//@HystrixCommand
 	public Single<List<FeedItem>> getUserResource(@PathVariable("username") String username) {
-		return service.getUserResource(username).toList().toSingle();
+		return service.feed(username).toSingle();
 	}
 
 	@Override
