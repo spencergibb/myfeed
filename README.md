@@ -74,4 +74,3 @@ and add the following to `/etc/resolver/myfeed.com`
 
     nameserver 127.0.0.1
 
-
