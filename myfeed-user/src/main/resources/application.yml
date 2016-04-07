@@ -11,6 +11,8 @@ spring:
         userinitialized:
           destination: userinit
           contentType: application/json
+          producer:
+            requiredGroups: feeduserinit
   jackson:
     serialization:
       indent_output: true

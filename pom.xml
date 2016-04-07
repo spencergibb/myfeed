@@ -27,9 +27,10 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<spring-cloud.version>Brixton.BUILD-SNAPSHOT</spring-cloud.version>
-		<spring-cloud-netflix.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-		<spring-data-releasetrain.version>Hopper-BUILD-SNAPSHOT</spring-data-releasetrain.version>
+		<spring-cloud.version>Brixton.RC1</spring-cloud.version>
+		<spring-cloud-netflix.version>1.1.0.RC1</spring-cloud-netflix.version>
+		<spring-cloud-stream.version>1.0.0.RC1</spring-cloud-stream.version>
+		<spring-data-releasetrain.version>Hopper-RC1</spring-data-releasetrain.version>
 	</properties>
 
 	<build>
@@ -172,6 +173,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-stream-redis</artifactId>
+				<version>${spring-cloud-stream.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-netflix-sidecar</artifactId>
 				<version>${spring-cloud-netflix.version}</version>
 			</dependency>
@@ -249,10 +255,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-stream-redis</artifactId>
 		</dependency>
+		<!-- Begin deps for removed starter-bus-redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-redis</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-bus-redis</artifactId>
+			<artifactId>spring-cloud-bus</artifactId>
 		</dependency>
+		<!-- End deps for removed starter-bus-redis -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
@@ -329,14 +341,14 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>netflix-bintray</id>
 			<name>Netflix Bintray</name>
 			<url>http://dl.bintray.com/netflixoss/maven</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
+		</repository>-->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
